@@ -17,6 +17,7 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     double w = MediaQuery.of(context).size.width;
+    double h = MediaQuery.of(context).size.height;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Theme.of(context).colorScheme.background,
@@ -24,11 +25,12 @@ class _LoginState extends State<Login> {
         child: GestureDetector(
           behavior: HitTestBehavior.opaque,
           onTap: () => FocusScope.of(context).unfocus(),
-          child: Stack(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Padding(
                 padding: EdgeInsets.only(
-                  bottom: MediaQuery.of(context).size.height / 3,
+                  top: h * 0.1,
                   left: w * 0.133,
                   right: w * 0.133,
                 ),
@@ -51,42 +53,45 @@ class _LoginState extends State<Login> {
                         ),
                       ],
                     ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        LoginTextField(
-                          text: 'Логин',
-                          onChanged: (p0) => login = p0,
-                          enabled: true,
-                          validator: (value) {
-                            if (value == null) {
-                              return 'Это поле должно быть заполнено';
-                            }
-                            return null;
-                          },
-                        ),
-                        LoginTextField(
-                          passwordField: true,
-                          text: 'Пароль',
-                          onChanged: (p0) => password = p0,
-                          enabled: true,
-                          validator: (value) {
-                            if (value == null) {
-                              return 'Это поле должно быть заполнено';
-                            }
-                            if (value.length < 6) {
-                              return 'Пароль должен содержать как минимум 6 символов';
-                            }
-                            if (value.length > 100) {
-                              return 'Пароль должен содержать до 100 символов';
-                            }
-                            if (!value.isValidPassword()) {
-                              return 'Пароль должен содержать латинские буквы, цифры и специальные символы (!@#\$&*~_-)';
-                            }
-                            return null;
-                          },
-                        ),
-                      ],
+                    Padding(
+                      padding: EdgeInsets.only(top: h * 0.1),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          LoginTextField(
+                            text: 'Логин',
+                            onChanged: (p0) => login = p0,
+                            enabled: true,
+                            validator: (value) {
+                              if (value == null) {
+                                return 'Это поле должно быть заполнено';
+                              }
+                              return null;
+                            },
+                          ),
+                          LoginTextField(
+                            passwordField: true,
+                            text: 'Пароль',
+                            onChanged: (p0) => password = p0,
+                            enabled: true,
+                            validator: (value) {
+                              if (value == null) {
+                                return 'Это поле должно быть заполнено';
+                              }
+                              if (value.length < 6) {
+                                return 'Пароль должен содержать как минимум 6 символов';
+                              }
+                              if (value.length > 100) {
+                                return 'Пароль должен содержать до 100 символов';
+                              }
+                              if (!value.isValidPassword()) {
+                                return 'Пароль должен содержать латинские буквы, цифры и специальные символы (!@#\$&*~_-)';
+                              }
+                              return null;
+                            },
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -98,7 +103,7 @@ class _LoginState extends State<Login> {
                       validatePassword(password) == null) {
                     if (Hive.box('user').get('password') != null &&
                         password == Hive.box('user').get('password') &&
-                        Hive.box('user').get('email') != null &&
+                        Hive.box('user').get('login') != null &&
                         login == Hive.box('user').get('login')) {
                       //! после подключения бэка убрать
                       showDialog(
@@ -133,8 +138,14 @@ class _LoginState extends State<Login> {
                     }
                   }
                 },
-                padding: EdgeInsets.only(
-                  bottom: w * 0.16,
+              ),
+              Padding(
+                padding: EdgeInsets.only(bottom: h * 0.01),
+                child: Text(
+                  'система администрирования сервиса развития навыков сотрудников IT компаний, 2024',
+                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                        fontSize: 14,
+                      ),
                 ),
               ),
             ],
@@ -165,11 +176,11 @@ class LoginTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     double w = MediaQuery.of(context).size.width;
     return Container(
-      padding: EdgeInsets.only(left: w * 0.027),
-      margin: EdgeInsets.symmetric(vertical: w * 0.013),
+      padding: EdgeInsets.only(left: w * 0.007),
+      margin: EdgeInsets.symmetric(vertical: w * 0.008),
+      width: w * 0.45,
       decoration: BoxDecoration(
-        color: Theme.of(context).hoverColor,
-        borderRadius: BorderRadius.all(Radius.circular(w * 0.027)),
+        color: Theme.of(context).colorScheme.onSecondaryContainer,
       ),
       child: TextFormField(
         autocorrect: !passwordField,
@@ -178,11 +189,12 @@ class LoginTextField extends StatelessWidget {
         enabled: enabled,
         validator: validator,
         onChanged: onChanged,
-        style: Theme.of(context).textTheme.headlineMedium,
+        style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontSize: 20),
         cursorColor: Colors.grey,
         decoration: InputDecoration(
           hintText: text,
-          hintStyle: Theme.of(context).textTheme.headlineMedium,
+          hintStyle:
+              Theme.of(context).textTheme.titleLarge?.copyWith(fontSize: 20),
           border: InputBorder.none,
           suffixIcon: suffixIcon,
         ),
@@ -198,22 +210,27 @@ class AlwaysDisabledFocusNode extends FocusNode {
 
 void showAlertDialog(BuildContext context, String message) {
   Widget getButton(String text, Function() onPressed) => Container(
+        height: MediaQuery.of(context).size.height * 0.055,
         decoration: BoxDecoration(
-          color: Theme.of(context).hoverColor,
-          borderRadius: const BorderRadius.all(Radius.circular(15)),
+          color: Theme.of(context).colorScheme.onSecondaryContainer,
+          borderRadius: const BorderRadius.all(Radius.circular(25)),
         ),
         child: TextButton(
           onPressed: onPressed,
-          child: Text(
-            text,
-            style:
-                Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: 14),
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+                horizontal: MediaQuery.of(context).size.width * 0.015),
+            child: Text(
+              text,
+              style:
+                  Theme.of(context).textTheme.bodyLarge?.copyWith(fontSize: 20),
+            ),
           ),
         ),
       );
 
   Widget alertDialog = AlertDialog(
-    backgroundColor: Theme.of(context).listTileTheme.tileColor,
+    backgroundColor: Theme.of(context).colorScheme.onTertiaryContainer,
     title: Padding(
         padding: EdgeInsets.only(
           top: MediaQuery.of(context).size.width * 0.04,
@@ -223,28 +240,19 @@ void showAlertDialog(BuildContext context, String message) {
             Text(
               message,
               textAlign: TextAlign.center,
-              style: Theme.of(context)
-                  .textTheme
-                  .titleLarge
-                  ?.copyWith(fontSize: 17),
+              style:
+                  Theme.of(context).textTheme.bodyLarge?.copyWith(fontSize: 25),
             ),
           ],
         )),
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.all(
-          Radius.circular(MediaQuery.of(context).size.width * 0.053)),
+          Radius.circular(MediaQuery.of(context).size.width * 0.01)),
     ),
-    content: Row(children: [
-      Expanded(
-        child: Padding(
-          padding: EdgeInsets.only(
-            right: MediaQuery.of(context).size.width * 0.013,
-          ),
-          child: getButton('Понятно', () {
-            Navigator.pop(context);
-          }),
-        ),
-      ),
+    content: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+      getButton('Понятно', () {
+        Navigator.pop(context);
+      }),
     ]),
     actionsAlignment: MainAxisAlignment.spaceAround,
   );

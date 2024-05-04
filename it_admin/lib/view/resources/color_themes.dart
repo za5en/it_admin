@@ -94,7 +94,7 @@ class ItAdminColorTheme {
         ),
         dividerTheme: const DividerThemeData(
           color: Colors.black,
-          thickness: 2,
+          thickness: 1,
         ),
       );
   ThemeData get dark => ThemeData(
@@ -190,7 +190,7 @@ class ItAdminColorTheme {
         ),
         dividerTheme: const DividerThemeData(
           color: Color.fromARGB(50, 195, 239, 255),
-          thickness: 2,
+          thickness: 1,
         ),
       );
 }

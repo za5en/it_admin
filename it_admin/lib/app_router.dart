@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:it_admin/view/pages/comps/comps.dart';
 
 import 'view/pages/login.dart';
+import 'view/pages/users/users.dart';
 
 class AppRouter {
   const AppRouter();
@@ -9,12 +11,12 @@ class AppRouter {
       case '/':
         return MaterialPageRoute(
             settings: settings, builder: (_) => const Login());
-      // case '/users':
-      //   return MaterialPageRoute(
-      //       settings: settings, builder: (_) => const Users());
-      // case '/comps':
-      //   return MaterialPageRoute(
-      //       settings: settings, builder: (_) => const Competencies());
+      case '/users':
+        return MaterialPageRoute(
+            settings: settings, builder: (_) => const Users());
+      case '/comps':
+        return MaterialPageRoute(
+            settings: settings, builder: (_) => const Comps());
       default:
         throw ErrorDescription('Unknown route name: ${settings.name}');
     }

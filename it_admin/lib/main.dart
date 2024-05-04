@@ -4,6 +4,7 @@ import 'package:hive/hive.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/intl_standalone.dart';
+import 'package:it_admin/controllers/admin_controller.dart';
 import 'package:it_admin/view/resources/color_themes.dart';
 
 import 'app_router.dart';
@@ -15,6 +16,13 @@ void main() async {
   await initializeDateFormatting();
   await HiveController.initHive();
 
+  late AdminController adminController;
+  bool isRegistered = Get.isRegistered<AdminController>();
+  if (isRegistered) {
+    adminController = Get.find<AdminController>();
+  } else {
+    adminController = Get.put(AdminController());
+  }
   runApp(const ItAdminApp());
 }
 
