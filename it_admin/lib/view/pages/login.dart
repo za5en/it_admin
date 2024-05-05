@@ -210,7 +210,8 @@ class AlwaysDisabledFocusNode extends FocusNode {
 
 void showAlertDialog(BuildContext context, String message) {
   Widget getButton(String text, Function() onPressed) => Container(
-        height: MediaQuery.of(context).size.height * 0.055,
+        height: 45,
+        width: MediaQuery.of(context).size.width * 0.15,
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.onSecondaryContainer,
           borderRadius: const BorderRadius.all(Radius.circular(25)),
@@ -223,7 +224,7 @@ void showAlertDialog(BuildContext context, String message) {
             child: Text(
               text,
               style:
-                  Theme.of(context).textTheme.bodyLarge?.copyWith(fontSize: 20),
+                  Theme.of(context).textTheme.bodyLarge?.copyWith(fontSize: 25),
             ),
           ),
         ),
@@ -233,23 +234,29 @@ void showAlertDialog(BuildContext context, String message) {
     backgroundColor: Theme.of(context).colorScheme.onTertiaryContainer,
     title: Padding(
         padding: EdgeInsets.only(
-          top: MediaQuery.of(context).size.width * 0.04,
+          top: MediaQuery.of(context).size.width * 0.01,
         ),
-        child: Column(
-          children: [
-            Text(
-              message,
-              textAlign: TextAlign.center,
-              style:
-                  Theme.of(context).textTheme.bodyLarge?.copyWith(fontSize: 25),
-            ),
-          ],
+        child: SizedBox(
+          height: 150,
+          width: 800,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                message,
+                textAlign: TextAlign.center,
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyLarge
+                    ?.copyWith(fontSize: 25),
+              ),
+            ],
+          ),
         )),
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.all(
-          Radius.circular(MediaQuery.of(context).size.width * 0.01)),
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.all(Radius.circular(25)),
     ),
-    content: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+    content: Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
       getButton('Понятно', () {
         Navigator.pop(context);
       }),

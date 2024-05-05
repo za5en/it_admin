@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
+import 'package:it_admin/view/pages/users/user_comps.dart';
 
 import '../../../controllers/admin_controller.dart';
 import '../../widgets/a_app_bar.dart';
@@ -9,6 +10,7 @@ import '../../widgets/a_drop_down.dart';
 import '../../widgets/a_elevated_button.dart';
 import '../../widgets/a_pop_up.dart';
 import '../../widgets/a_svg_icon.dart';
+import '../login.dart';
 
 class Users extends StatefulWidget {
   const Users({super.key});
@@ -21,8 +23,29 @@ class _UsersState extends State<Users> {
   var name = 'Имя пользователя';
   var page = 1;
   var adminController = Get.find<AdminController>();
+  var pageList = [];
+  bool filter = false;
   @override
   Widget build(BuildContext context) {
+    int pages = adminController.userList.length ~/ 10 + 1;
+    if (!filter) {
+      pageList = adminController.userList.length < 10 * page
+          ? adminController.userList
+              .getRange(10 * (page - 1), adminController.userList.length)
+              .toList()
+          : adminController.userList
+              .getRange(10 * (page - 1), 10 * page)
+              .toList();
+    }
+
+    var userList = ['Имя пользователя'];
+    List<String> userNames = [];
+    for (var i = 0; i < adminController.userList.length; i++) {
+      userNames.add(adminController.userList[i].name ?? 'user');
+    }
+    userNames = userNames.toSet().toList();
+    userList.addAll(userNames);
+
     double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
     return Scaffold(
@@ -63,7 +86,7 @@ class _UsersState extends State<Users> {
               ),
             ),
             onTap: () {
-              alertDialog(context, 'Выйти из аккаунта?', false, () async {
+              alertDialog(context, 'Выйти из аккаунта?', () async {
                 await Hive.box('user').put('isLogged', false);
                 await Hive.box('settings').put('initial_screen', '/');
                 Get.back();
@@ -96,7 +119,7 @@ class _UsersState extends State<Users> {
                                 .colorScheme
                                 .onSecondaryContainer,
                             borderRadius:
-                                BorderRadius.all(Radius.circular(w * 0.032)),
+                                const BorderRadius.all(Radius.circular(25)),
                           ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -124,48 +147,46 @@ class _UsersState extends State<Users> {
                         ),
                         onSelected: (value) {
                           // var userList = adminController.getUsers();
-                          var userList = [
-                            'Имя пользователя',
-                            'userName1',
-                            'userName2',
-                            'userName3',
-                            'userName4',
-                            'userName5',
-                            'userName6'
-                          ];
                           setState(() {
                             name = userList[value];
+                            if (name != 'Имя пользователя') {
+                              setState(() {
+                                pageList = adminController.userList.length <
+                                        10 * page
+                                    ? adminController.userList
+                                        .getRange(10 * (page - 1),
+                                            adminController.userList.length)
+                                        .toList()
+                                    : adminController.userList
+                                        .getRange(10 * (page - 1), 10 * page)
+                                        .toList();
+                                pageList = pageList
+                                    .where((element) => element.name == name)
+                                    .toList();
+                                filter = true;
+                              });
+                            } else {
+                              setState(() {
+                                pageList = adminController.userList.length <
+                                        10 * page
+                                    ? adminController.userList
+                                        .getRange(10 * (page - 1),
+                                            adminController.userList.length)
+                                        .toList()
+                                    : adminController.userList
+                                        .getRange(10 * (page - 1), 10 * page)
+                                        .toList();
+                                filter = false;
+                              });
+                            }
                           });
                         },
                         popupMenuData: [
-                          APopupMenuData(
-                            child: Text('Имя пользователя',
-                                style: Theme.of(context).textTheme.bodyLarge),
-                          ),
-                          APopupMenuData(
-                            child: Text('userName1',
-                                style: Theme.of(context).textTheme.bodyLarge),
-                          ),
-                          APopupMenuData(
-                            child: Text('userName2',
-                                style: Theme.of(context).textTheme.bodyLarge),
-                          ),
-                          APopupMenuData(
-                            child: Text('userName3',
-                                style: Theme.of(context).textTheme.bodyLarge),
-                          ),
-                          APopupMenuData(
-                            child: Text('userName4',
-                                style: Theme.of(context).textTheme.bodyLarge),
-                          ),
-                          APopupMenuData(
-                            child: Text('userName5',
-                                style: Theme.of(context).textTheme.bodyLarge),
-                          ),
-                          APopupMenuData(
-                            child: Text('userName6',
-                                style: Theme.of(context).textTheme.bodyLarge),
-                          ),
+                          for (var i = 0; i < userList.length; i++)
+                            APopupMenuData(
+                              child: Text(userList[i],
+                                  style: Theme.of(context).textTheme.bodyLarge),
+                            ),
                         ],
                       ),
                     ),
@@ -175,9 +196,7 @@ class _UsersState extends State<Users> {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 35.0),
                 child: Container(
-                  height: adminController.userList.length < 10
-                      ? adminController.userList.length * 65
-                      : h,
+                  height: pageList.length < 10 ? pageList.length * 65 : 650,
                   width: w * 0.98,
                   decoration: BoxDecoration(
                     color: Theme.of(context).colorScheme.secondary,
@@ -187,9 +206,7 @@ class _UsersState extends State<Users> {
                     child: Padding(
                       padding: const EdgeInsets.only(top: 10.0),
                       child: ListView.builder(
-                          itemCount: adminController.userList.length < 10
-                              ? adminController.userList.length
-                              : 10,
+                          itemCount: pageList.length,
                           itemBuilder: (context, index) {
                             return Column(
                               children: [
@@ -216,9 +233,7 @@ class _UsersState extends State<Users> {
                                                           left: 30.0,
                                                           right: 30.0),
                                                   child: Text(
-                                                    adminController
-                                                            .userList[index]
-                                                            .name ??
+                                                    pageList[index].name ??
                                                         'user',
                                                     style: Theme.of(context)
                                                         .textTheme
@@ -230,14 +245,13 @@ class _UsersState extends State<Users> {
                                               ],
                                             ),
                                             onTap: () {
-                                              //open user_comps page
+                                              Get.to(() => UserComps(
+                                                  user: pageList[index]));
                                             },
                                           ),
                                           InkWell(
                                             child: Text(
-                                              adminController
-                                                      .userList[index].email ??
-                                                  'email',
+                                              pageList[index].email ?? 'email',
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .titleLarge
@@ -249,8 +263,7 @@ class _UsersState extends State<Users> {
                                             onTap: () async {
                                               await Clipboard.setData(
                                                   ClipboardData(
-                                                      text: adminController
-                                                              .userList[index]
+                                                      text: pageList[index]
                                                               .email ??
                                                           'email'));
                                               Get.snackbar('Успешно',
@@ -269,7 +282,37 @@ class _UsersState extends State<Users> {
                                                   .primary,
                                               height: 45,
                                             ),
-                                            onTap: () {},
+                                            onTap: () async {
+                                              var name = await editDialog(
+                                                  context,
+                                                  'Изменить имя пользователя ${pageList[index].name}:');
+                                              var id = pageList[index].id;
+                                              setState(() {
+                                                pageList[index].name =
+                                                    name != ''
+                                                        ? name
+                                                        : pageList[index].name;
+                                              });
+                                              for (var i = 0;
+                                                  i <
+                                                      adminController
+                                                          .userList.length;
+                                                  i++) {
+                                                if (adminController
+                                                        .userList[i].id ==
+                                                    id) {
+                                                  setState(() {
+                                                    adminController
+                                                            .userList[i].name =
+                                                        name != ''
+                                                            ? name
+                                                            : adminController
+                                                                .userList[i]
+                                                                .name;
+                                                  });
+                                                }
+                                              }
+                                            },
                                           ),
                                           const SizedBox(
                                             width: 30.0,
@@ -282,7 +325,13 @@ class _UsersState extends State<Users> {
                                                   .primary,
                                               height: 45,
                                             ),
-                                            onTap: () {},
+                                            onTap: () {
+                                              alertDialog(context,
+                                                  'Составить отчёт по пользователю ${pageList[index].name} и скачать его?',
+                                                  () {
+                                                Navigator.pop(context);
+                                              });
+                                            },
                                           ),
                                         ],
                                       ),
@@ -290,10 +339,7 @@ class _UsersState extends State<Users> {
                                   ),
                                 ),
                                 Visibility(
-                                  visible: adminController.userList.length < 10
-                                      ? index <
-                                          adminController.userList.length - 1
-                                      : index < 9,
+                                  visible: index < pageList.length - 1,
                                   child: const Divider(
                                     thickness: 0.0,
                                     height: 19,
@@ -311,12 +357,134 @@ class _UsersState extends State<Users> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    Visibility(
+                      visible: page != 1,
+                      child: InkWell(
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 10.0),
+                          child: Text(
+                            '1',
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleLarge
+                                ?.copyWith(fontSize: 20),
+                          ),
+                        ),
+                        onTap: () {
+                          setState(() {
+                            page = 1;
+                            filter = false;
+                            name = 'Имя пользователя';
+                          });
+                        },
+                      ),
+                    ),
+                    Visibility(
+                      visible: pages > 5 && page > 4,
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 10.0),
+                        child: Text(
+                          '...',
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleLarge
+                              ?.copyWith(fontSize: 20),
+                        ),
+                      ),
+                    ),
+                    for (var i = page - 2 > 1
+                            ? page - 2
+                            : page - 1 > 1
+                                ? page - 1
+                                : page;
+                        i < page;
+                        i++)
+                      Padding(
+                        padding: const EdgeInsets.only(right: 10.0),
+                        child: InkWell(
+                          child: Text(
+                            i.toString(),
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleLarge
+                                ?.copyWith(fontSize: 20),
+                          ),
+                          onTap: () {
+                            setState(() {
+                              page = i;
+                              filter = false;
+                              name = 'Имя пользователя';
+                            });
+                          },
+                        ),
+                      ),
                     AElevatedButtonExtended(
                         width: 50,
                         pad: false,
                         textSize: 20,
                         text: page.toString(),
                         onPressed: () {}),
+                    for (var i = page + 1;
+                        page + 2 < pages
+                            ? i <= page + 2
+                            : page + 2 == pages
+                                ? i <= page + 1
+                                : i < page + 1;
+                        i++)
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10.0),
+                        child: InkWell(
+                          child: Text(
+                            i.toString(),
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleLarge
+                                ?.copyWith(fontSize: 20),
+                          ),
+                          onTap: () {
+                            setState(() {
+                              page = i;
+                              filter = false;
+                              name = 'Имя пользователя';
+                            });
+                          },
+                        ),
+                      ),
+                    Visibility(
+                      visible: pages > 5 && page <= pages - 4,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 10.0),
+                        child: Text(
+                          '...',
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleLarge
+                              ?.copyWith(fontSize: 20),
+                        ),
+                      ),
+                    ),
+                    Visibility(
+                      visible: page != pages && pages > page,
+                      child: InkWell(
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 10.0),
+                          child: Text(
+                            pages.toString(),
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleLarge
+                                ?.copyWith(fontSize: 20),
+                          ),
+                        ),
+                        onTap: () {
+                          setState(() {
+                            page = pages;
+                            filter = false;
+                            name = 'Имя пользователя';
+                          });
+                        },
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -336,7 +504,7 @@ class _UsersState extends State<Users> {
     );
   }
 
-  alertDialog(context, message, isEdit, onPressed) {
+  alertDialog(context, message, onPressed) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -346,37 +514,94 @@ class _UsersState extends State<Users> {
                 padding: EdgeInsets.only(
                   top: MediaQuery.of(context).size.width * 0.01,
                 ),
-                child: Column(
-                  children: [
-                    Text(
-                      message,
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyLarge
-                          ?.copyWith(fontSize: 25),
-                    ),
-                  ],
+                child: SizedBox(
+                  height: 150,
+                  width: 800,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        message,
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyLarge
+                            ?.copyWith(fontSize: 25),
+                      ),
+                    ],
+                  ),
                 )),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(
-                  Radius.circular(MediaQuery.of(context).size.width * 0.01)),
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(25)),
             ),
             content: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  getButton(isEdit ? 'Отмена' : 'Нет', () {
+                  getButton('Нет', () {
                     Navigator.pop(context);
                   }),
-                  getButton(isEdit ? 'Ок' : 'Да', onPressed),
+                  getButton('Да', onPressed),
                 ]),
             actionsAlignment: MainAxisAlignment.spaceAround,
           );
         });
   }
 
+  Future<String> editDialog(context, message) async {
+    var newUserName = await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          String newName = '';
+          return AlertDialog(
+            backgroundColor: Theme.of(context).colorScheme.onTertiaryContainer,
+            title: Padding(
+                padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.width * 0.01,
+                ),
+                child: SizedBox(
+                  height: 150,
+                  width: 800,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        message,
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyLarge
+                            ?.copyWith(fontSize: 25),
+                      ),
+                      LoginTextField(
+                        text: 'Имя пользователя',
+                        onChanged: (p0) => newName = p0,
+                        enabled: true,
+                      ),
+                    ],
+                  ),
+                )),
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(25)),
+            ),
+            content: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  getButton('Отмена', () {
+                    Navigator.pop(context, '');
+                  }),
+                  getButton('Ок', () {
+                    Navigator.pop(context, newName);
+                  }),
+                ]),
+            actionsAlignment: MainAxisAlignment.spaceAround,
+          );
+        });
+    return newUserName;
+  }
+
   Widget getButton(String text, Function() onPressed) => Container(
-        height: MediaQuery.of(context).size.height * 0.055,
+        height: 45,
+        width: MediaQuery.of(context).size.width * 0.15,
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.onSecondaryContainer,
           borderRadius: const BorderRadius.all(Radius.circular(25)),
@@ -389,7 +614,7 @@ class _UsersState extends State<Users> {
             child: Text(
               text,
               style:
-                  Theme.of(context).textTheme.bodyLarge?.copyWith(fontSize: 20),
+                  Theme.of(context).textTheme.bodyLarge?.copyWith(fontSize: 25),
             ),
           ),
         ),

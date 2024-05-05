@@ -1,4 +1,4 @@
-import 'level.dart';
+import 'test.dart';
 
 class User {
   User({
@@ -29,11 +29,11 @@ class UserCompetency {
     required this.id,
     required this.name,
     required this.isCompleted,
-    required this.levels,
+    required this.tests,
   });
 
   int id;
   String? name;
   bool? isCompleted;
-  List<Level>? levels;
+  List<UserTest>? tests;
 }

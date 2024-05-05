@@ -7,11 +7,13 @@ class AAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.leading,
       this.actions,
       this.size,
+      this.toolbarHeight,
       this.nonDefWidth,
       this.backgroundColor});
   final Widget? title;
   final Widget? leading;
   final double? size;
+  final double? toolbarHeight;
   final List<Widget>? actions;
   final bool? nonDefWidth;
   final Color? backgroundColor;
@@ -22,6 +24,7 @@ class AAppBar extends StatelessWidget implements PreferredSizeWidget {
       centerTitle: true,
       title: title,
       leading: leading,
+      toolbarHeight: toolbarHeight,
       actions: actions,
       leadingWidth: nonDefWidth != null ? 200 : null,
       backgroundColor: backgroundColor,

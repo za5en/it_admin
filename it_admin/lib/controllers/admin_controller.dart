@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:it_admin/data/competency.dart';
 import 'package:it_admin/data/level.dart';
 import 'package:it_admin/data/skill.dart';
+import 'package:it_admin/data/test.dart';
 
 import '../data/data.dart';
 import '../data/user.dart';
@@ -31,17 +32,20 @@ class AdminController extends GetxController {
           ],
           levelName: 'level1',
           priority: 1,
-          testId: 1,
-          testQs: ['Вопрос 1', 'Вопрос 2', 'Вопрос 3', 'Вопрос 4'],
-          testAns: {
-            1: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
-            2: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
-            3: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
-            4: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4']
-          },
-          testCorr: [2, 3, 1, 2],
-          testTime: 15,
-          solutionDuration: 12)
+          tests: [
+            Test(
+              id: 1,
+              testQs: ['Вопрос 1', 'Вопрос 2', 'Вопрос 3', 'Вопрос 4'],
+              testAns: {
+                1: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
+                2: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
+                3: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
+                4: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4']
+              },
+              testCorr: [2, 3, 1, 2],
+              testTime: 15,
+            )
+          ])
     ],
   );
 
@@ -55,26 +59,22 @@ class AdminController extends GetxController {
         UserCompetency(
           id: 1,
           name: 'competency1',
-          levels: [
-            Level(
-                id: 1,
-                skills: [
-                  Skill(
-                      id: 1, skillName: 'skill1', fileInfo: {1: 'filename.md'})
-                ],
-                levelName: 'level1',
-                priority: 1,
-                testId: 1,
-                testQs: ['Вопрос 1', 'Вопрос 2', 'Вопрос 3', 'Вопрос 4'],
-                testAns: {
-                  1: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
-                  2: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
-                  3: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
-                  4: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4']
-                },
-                testCorr: [2, 3, 1, 2],
-                testTime: 15,
-                solutionDuration: 12)
+          tests: [
+            UserTest(
+              id: 1,
+              testQs: ['Вопрос 1', 'Вопрос 2', 'Вопрос 3', 'Вопрос 4'],
+              testAns: {
+                1: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
+                2: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
+                3: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
+                4: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4']
+              },
+              testCorr: [2, 3, 1, 2],
+              userAns: [2, 3, 1, 1],
+              testTime: 15,
+              testTimeStart: DateTime.now(),
+              solutionDuration: 12,
+            )
           ],
           isCompleted: true,
         ),
@@ -89,26 +89,22 @@ class AdminController extends GetxController {
         UserCompetency(
           id: 1,
           name: 'competency1',
-          levels: [
-            Level(
-                id: 1,
-                skills: [
-                  Skill(
-                      id: 1, skillName: 'skill1', fileInfo: {1: 'filename.md'})
-                ],
-                levelName: 'level1',
-                priority: 1,
-                testId: 1,
-                testQs: ['Вопрос 1', 'Вопрос 2', 'Вопрос 3', 'Вопрос 4'],
-                testAns: {
-                  1: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
-                  2: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
-                  3: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
-                  4: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4']
-                },
-                testCorr: [2, 3, 1, 2],
-                testTime: 15,
-                solutionDuration: 12)
+          tests: [
+            UserTest(
+              id: 1,
+              testQs: ['Вопрос 1', 'Вопрос 2', 'Вопрос 3', 'Вопрос 4'],
+              testAns: {
+                1: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
+                2: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
+                3: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
+                4: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4']
+              },
+              testCorr: [2, 3, 1, 2],
+              userAns: [2, 3, 1, 1],
+              testTime: 15,
+              testTimeStart: DateTime.now(),
+              solutionDuration: 12,
+            )
           ],
           isCompleted: true,
         ),
@@ -123,26 +119,22 @@ class AdminController extends GetxController {
         UserCompetency(
           id: 1,
           name: 'competency1',
-          levels: [
-            Level(
-                id: 1,
-                skills: [
-                  Skill(
-                      id: 1, skillName: 'skill1', fileInfo: {1: 'filename.md'})
-                ],
-                levelName: 'level1',
-                priority: 1,
-                testId: 1,
-                testQs: ['Вопрос 1', 'Вопрос 2', 'Вопрос 3', 'Вопрос 4'],
-                testAns: {
-                  1: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
-                  2: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
-                  3: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
-                  4: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4']
-                },
-                testCorr: [2, 3, 1, 2],
-                testTime: 15,
-                solutionDuration: 12)
+          tests: [
+            UserTest(
+              id: 1,
+              testQs: ['Вопрос 1', 'Вопрос 2', 'Вопрос 3', 'Вопрос 4'],
+              testAns: {
+                1: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
+                2: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
+                3: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
+                4: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4']
+              },
+              testCorr: [2, 3, 1, 2],
+              userAns: [2, 3, 1, 1],
+              testTime: 15,
+              testTimeStart: DateTime.now(),
+              solutionDuration: 12,
+            )
           ],
           isCompleted: true,
         ),
@@ -157,26 +149,22 @@ class AdminController extends GetxController {
         UserCompetency(
           id: 1,
           name: 'competency1',
-          levels: [
-            Level(
-                id: 1,
-                skills: [
-                  Skill(
-                      id: 1, skillName: 'skill1', fileInfo: {1: 'filename.md'})
-                ],
-                levelName: 'level1',
-                priority: 1,
-                testId: 1,
-                testQs: ['Вопрос 1', 'Вопрос 2', 'Вопрос 3', 'Вопрос 4'],
-                testAns: {
-                  1: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
-                  2: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
-                  3: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
-                  4: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4']
-                },
-                testCorr: [2, 3, 1, 2],
-                testTime: 15,
-                solutionDuration: 12)
+          tests: [
+            UserTest(
+              id: 1,
+              testQs: ['Вопрос 1', 'Вопрос 2', 'Вопрос 3', 'Вопрос 4'],
+              testAns: {
+                1: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
+                2: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
+                3: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
+                4: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4']
+              },
+              testCorr: [2, 3, 1, 2],
+              userAns: [2, 3, 1, 1],
+              testTime: 15,
+              testTimeStart: DateTime.now(),
+              solutionDuration: 12,
+            )
           ],
           isCompleted: true,
         ),
@@ -198,30 +186,152 @@ class AdminController extends GetxController {
         UserCompetency(
           id: 1,
           name: 'competency1',
-          levels: [
-            Level(
-                id: 1,
-                skills: [
-                  Skill(
-                      id: 1, skillName: 'skill1', fileInfo: {1: 'filename.md'})
-                ],
-                levelName: 'level1',
-                priority: 1,
-                testId: 1,
-                testQs: ['Вопрос 1', 'Вопрос 2', 'Вопрос 3', 'Вопрос 4'],
-                testAns: {
-                  1: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
-                  2: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
-                  3: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
-                  4: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4']
-                },
-                testCorr: [2, 3, 1, 2],
-                testTime: 15,
-                solutionDuration: 12)
+          tests: [
+            UserTest(
+              id: 1,
+              testQs: ['Вопрос 1', 'Вопрос 2', 'Вопрос 3', 'Вопрос 4'],
+              testAns: {
+                1: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
+                2: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
+                3: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
+                4: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4']
+              },
+              testCorr: [2, 3, 1, 2],
+              userAns: [2, 3, 1, 1],
+              testTime: 15,
+              testTimeStart: DateTime.now(),
+              solutionDuration: 12,
+            )
           ],
           isCompleted: true,
         ),
       ],
+    ),
+    User(
+      id: 5,
+      email: 'mail4@mail.ml',
+      name: 'userName5',
+      isActive: true,
+      comps: [],
+    ),
+    User(
+      id: 5,
+      email: 'mail4@mail.ml',
+      name: 'userName5',
+      isActive: true,
+      comps: [],
+    ),
+    User(
+      id: 5,
+      email: 'mail4@mail.ml',
+      name: 'userName5',
+      isActive: true,
+      comps: [],
+    ),
+    User(
+      id: 5,
+      email: 'mail4@mail.ml',
+      name: 'userName5',
+      isActive: true,
+      comps: [],
+    ),
+    User(
+      id: 5,
+      email: 'mail4@mail.ml',
+      name: 'userName5',
+      isActive: true,
+      comps: [],
+    ),
+    User(
+      id: 5,
+      email: 'mail4@mail.ml',
+      name: 'userName5',
+      isActive: true,
+      comps: [],
+    ),
+    User(
+      id: 5,
+      email: 'mail4@mail.ml',
+      name: 'userName5',
+      isActive: true,
+      comps: [],
+    ),
+    User(
+      id: 5,
+      email: 'mail4@mail.ml',
+      name: 'userName5',
+      isActive: true,
+      comps: [],
+    ),
+    User(
+      id: 5,
+      email: 'mail4@mail.ml',
+      name: 'userName5',
+      isActive: true,
+      comps: [],
+    ),
+    User(
+      id: 5,
+      email: 'mail4@mail.ml',
+      name: 'userName5',
+      isActive: true,
+      comps: [],
+    ),
+    User(
+      id: 5,
+      email: 'mail4@mail.ml',
+      name: 'userName5',
+      isActive: true,
+      comps: [],
+    ),
+    User(
+      id: 5,
+      email: 'mail4@mail.ml',
+      name: 'userName5',
+      isActive: true,
+      comps: [],
+    ),
+    User(
+      id: 5,
+      email: 'mail4@mail.ml',
+      name: 'userName5',
+      isActive: true,
+      comps: [],
+    ),
+    User(
+      id: 5,
+      email: 'mail4@mail.ml',
+      name: 'userName5',
+      isActive: true,
+      comps: [],
+    ),
+    User(
+      id: 5,
+      email: 'mail4@mail.ml',
+      name: 'userName5',
+      isActive: true,
+      comps: [],
+    ),
+    User(
+      id: 5,
+      email: 'mail4@mail.ml',
+      name: 'userName5',
+      isActive: true,
+      comps: [],
+    ),
+    User(
+      id: 5,
+      email: 'mail4@mail.ml',
+      name: 'userName5',
+      isActive: true,
+      comps: [],
+    ),
+    User(
+      id: 5,
+      email: 'mail4@mail.ml',
+      name: 'userName5',
+      isActive: true,
+      comps: [],
     ),
   ];
 
@@ -237,17 +347,20 @@ class AdminController extends GetxController {
             ],
             levelName: 'level1',
             priority: 1,
-            testId: 1,
-            testQs: ['Вопрос 1', 'Вопрос 2', 'Вопрос 3', 'Вопрос 4'],
-            testAns: {
-              1: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
-              2: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
-              3: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
-              4: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4']
-            },
-            testCorr: [2, 3, 1, 2],
-            testTime: 15,
-            solutionDuration: 12)
+            tests: [
+              Test(
+                id: 1,
+                testQs: ['Вопрос 1', 'Вопрос 2', 'Вопрос 3', 'Вопрос 4'],
+                testAns: {
+                  1: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
+                  2: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
+                  3: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
+                  4: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4']
+                },
+                testCorr: [2, 3, 1, 2],
+                testTime: 15,
+              )
+            ])
       ],
     ),
     Competency(
@@ -261,17 +374,20 @@ class AdminController extends GetxController {
             ],
             levelName: 'level1',
             priority: 1,
-            testId: 2,
-            testQs: ['Вопрос 1', 'Вопрос 2', 'Вопрос 3', 'Вопрос 4'],
-            testAns: {
-              1: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
-              2: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
-              3: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
-              4: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4']
-            },
-            testCorr: [2, 3, 1, 2],
-            testTime: 15,
-            solutionDuration: 12)
+            tests: [
+              Test(
+                id: 2,
+                testQs: ['Вопрос 1', 'Вопрос 2', 'Вопрос 3', 'Вопрос 4'],
+                testAns: {
+                  1: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
+                  2: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
+                  3: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
+                  4: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4']
+                },
+                testCorr: [2, 3, 1, 2],
+                testTime: 15,
+              )
+            ])
       ],
     ),
     Competency(
@@ -285,17 +401,20 @@ class AdminController extends GetxController {
             ],
             levelName: 'level1',
             priority: 1,
-            testId: 3,
-            testQs: ['Вопрос 1', 'Вопрос 2', 'Вопрос 3', 'Вопрос 4'],
-            testAns: {
-              1: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
-              2: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
-              3: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
-              4: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4']
-            },
-            testCorr: [2, 3, 1, 2],
-            testTime: 15,
-            solutionDuration: 12)
+            tests: [
+              Test(
+                id: 3,
+                testQs: ['Вопрос 1', 'Вопрос 2', 'Вопрос 3', 'Вопрос 4'],
+                testAns: {
+                  1: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
+                  2: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
+                  3: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
+                  4: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4']
+                },
+                testCorr: [2, 3, 1, 2],
+                testTime: 15,
+              )
+            ])
       ],
     ),
     Competency(
@@ -309,17 +428,20 @@ class AdminController extends GetxController {
             ],
             levelName: 'level1',
             priority: 1,
-            testId: 4,
-            testQs: ['Вопрос 1', 'Вопрос 2', 'Вопрос 3', 'Вопрос 4'],
-            testAns: {
-              1: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
-              2: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
-              3: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
-              4: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4']
-            },
-            testCorr: [2, 3, 1, 2],
-            testTime: 15,
-            solutionDuration: 12)
+            tests: [
+              Test(
+                id: 4,
+                testQs: ['Вопрос 1', 'Вопрос 2', 'Вопрос 3', 'Вопрос 4'],
+                testAns: {
+                  1: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
+                  2: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
+                  3: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
+                  4: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4']
+                },
+                testCorr: [2, 3, 1, 2],
+                testTime: 15,
+              )
+            ])
       ],
     ),
     Competency(
@@ -333,17 +455,20 @@ class AdminController extends GetxController {
             ],
             levelName: 'level1',
             priority: 1,
-            testId: 5,
-            testQs: ['Вопрос 1', 'Вопрос 2', 'Вопрос 3', 'Вопрос 4'],
-            testAns: {
-              1: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
-              2: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
-              3: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
-              4: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4']
-            },
-            testCorr: [2, 3, 1, 2],
-            testTime: 15,
-            solutionDuration: 12)
+            tests: [
+              Test(
+                id: 5,
+                testQs: ['Вопрос 1', 'Вопрос 2', 'Вопрос 3', 'Вопрос 4'],
+                testAns: {
+                  1: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
+                  2: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
+                  3: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
+                  4: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4']
+                },
+                testCorr: [2, 3, 1, 2],
+                testTime: 15,
+              )
+            ])
       ],
     ),
     Competency(
@@ -357,17 +482,20 @@ class AdminController extends GetxController {
             ],
             levelName: 'level1',
             priority: 1,
-            testId: 6,
-            testQs: ['Вопрос 1', 'Вопрос 2', 'Вопрос 3', 'Вопрос 4'],
-            testAns: {
-              1: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
-              2: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
-              3: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
-              4: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4']
-            },
-            testCorr: [2, 3, 1, 2],
-            testTime: 15,
-            solutionDuration: 12)
+            tests: [
+              Test(
+                id: 6,
+                testQs: ['Вопрос 1', 'Вопрос 2', 'Вопрос 3', 'Вопрос 4'],
+                testAns: {
+                  1: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
+                  2: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
+                  3: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
+                  4: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4']
+                },
+                testCorr: [2, 3, 1, 2],
+                testTime: 15,
+              )
+            ])
       ],
     ),
   ];
