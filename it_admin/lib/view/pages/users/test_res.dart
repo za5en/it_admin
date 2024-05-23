@@ -217,7 +217,7 @@ class _TestResState extends State<TestRes> {
                                               ),
                                               onTap: () {
                                                 alertDialog(context,
-                                                    'Выбран ответ:\n${widget.test.userAns?[index] ?? 1}. ${widget.test.testAns?[index][widget.test.userAns?[index] ?? 1] ?? 'abcabc'}\nПравильный ответ:\n${widget.test.testCorr?[index] ?? 1}. ${widget.test.testAns?[index][widget.test.testCorr?[index] ?? 1] ?? 'bacbac'}');
+                                                    'Выбран ответ:\n${widget.test.userAns?[index] ?? 1}. ${widget.test.testAns?[index + 1][widget.test.userAns?[index] ?? 1] ?? 'abcabc'}\nПравильный ответ:\n${widget.test.testCorr?[index] ?? 1}. ${widget.test.testAns?[index + 1][widget.test.testCorr?[index] ?? 1] ?? 'bacbac'}');
                                               },
                                             ),
                                           ],

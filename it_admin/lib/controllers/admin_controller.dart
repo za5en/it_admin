@@ -23,7 +23,7 @@ class AdminController extends GetxController {
 
   var _compData = Competency(
     id: 1,
-    name: 'competency1',
+    name: 'competency',
     levels: [
       Level(
           id: 1,
@@ -52,8 +52,8 @@ class AdminController extends GetxController {
   var userList = [
     User(
       id: 1,
-      email: 'mail@mail.ml',
-      name: 'userName1',
+      email: 'minakov@mail.ru',
+      name: 'Минаков Михаил Андреевич',
       isActive: true,
       comps: [
         UserCompetency(
@@ -82,8 +82,8 @@ class AdminController extends GetxController {
     ),
     User(
       id: 2,
-      email: 'mail1@mail.ml',
-      name: 'userName2',
+      email: 'vlasov@mail.ru',
+      name: 'Власов Федор Андреевич',
       isActive: true,
       comps: [
         UserCompetency(
@@ -112,8 +112,8 @@ class AdminController extends GetxController {
     ),
     User(
       id: 3,
-      email: 'mail2@mail.ml',
-      name: 'userName3',
+      email: 'sergeev@mail.ru',
+      name: 'Сергеев Георгий Григорьевич',
       isActive: true,
       comps: [
         UserCompetency(
@@ -142,8 +142,8 @@ class AdminController extends GetxController {
     ),
     User(
       id: 4,
-      email: 'mail3@mail.ml',
-      name: 'userName4',
+      email: 'shirobokov@mail.ru',
+      name: 'Широбоков Артём Алексеевич',
       isActive: true,
       comps: [
         UserCompetency(
@@ -172,15 +172,15 @@ class AdminController extends GetxController {
     ),
     User(
       id: 5,
-      email: 'mail4@mail.ml',
-      name: 'userName5',
+      email: 'stasov@mail.ru',
+      name: 'Стасов Станислав Сергеевич',
       isActive: true,
       comps: [],
     ),
     User(
       id: 6,
-      email: 'mail5@mail.ml',
-      name: 'userName6',
+      email: 'perevozchik@mail.ru',
+      name: 'Перевозчиков Алексей Артёмович',
       isActive: true,
       comps: [
         UserCompetency(
@@ -208,128 +208,128 @@ class AdminController extends GetxController {
       ],
     ),
     User(
-      id: 5,
-      email: 'mail4@mail.ml',
-      name: 'userName5',
+      id: 7,
+      email: 'pirozhok@mail.ru',
+      name: 'Пирожков Максим Евлампиевич',
       isActive: true,
       comps: [],
     ),
     User(
-      id: 5,
-      email: 'mail4@mail.ml',
-      name: 'userName5',
+      id: 8,
+      email: 'stulis@mail.ru',
+      name: 'Табуреткин Иван Самвелович',
       isActive: true,
       comps: [],
     ),
     User(
-      id: 5,
-      email: 'mail4@mail.ml',
-      name: 'userName5',
+      id: 9,
+      email: 'cherep@mail.ru',
+      name: 'Череповец Василий Иванович',
       isActive: true,
       comps: [],
     ),
     User(
-      id: 5,
-      email: 'mail4@mail.ml',
-      name: 'userName5',
+      id: 10,
+      email: 'nuance@mail.ru',
+      name: 'Нюансов Пётр Михайлович',
       isActive: true,
       comps: [],
     ),
     User(
-      id: 5,
-      email: 'mail4@mail.ml',
-      name: 'userName5',
+      id: 11,
+      email: 'batareika@mail.ru',
+      name: 'Подберецкий Илья Дмитриевич',
       isActive: true,
       comps: [],
     ),
     User(
-      id: 5,
-      email: 'mail4@mail.ml',
-      name: 'userName5',
+      id: 12,
+      email: 'ruslang23@mail.ru',
+      name: 'Губайдуллин Руслан Рустамович',
       isActive: true,
       comps: [],
     ),
     User(
-      id: 5,
-      email: 'mail4@mail.ml',
-      name: 'userName5',
+      id: 13,
+      email: 'ustalovmv@mail.ru',
+      name: 'Усталов Марсель Викторович',
       isActive: true,
       comps: [],
     ),
     User(
-      id: 5,
-      email: 'mail4@mail.ml',
-      name: 'userName5',
+      id: 14,
+      email: 'ustalovvv@mail.ru',
+      name: 'Усталов Виктор Вадимович',
       isActive: true,
       comps: [],
     ),
     User(
-      id: 5,
-      email: 'mail4@mail.ml',
-      name: 'userName5',
+      id: 15,
+      email: 'ustalovvad@mail.ru',
+      name: 'Усталов Вадим Васильевич',
       isActive: true,
       comps: [],
     ),
     User(
-      id: 5,
-      email: 'mail4@mail.ml',
-      name: 'userName5',
+      id: 16,
+      email: 'ustalovvas@mail.ru',
+      name: 'Усталов Василий Витальевич',
       isActive: true,
       comps: [],
     ),
     User(
-      id: 5,
-      email: 'mail4@mail.ml',
-      name: 'userName5',
+      id: 17,
+      email: 'ustalovvit@mail.ru',
+      name: 'Усталов Виталий Андреевич',
       isActive: true,
       comps: [],
     ),
     User(
-      id: 5,
-      email: 'mail4@mail.ml',
-      name: 'userName5',
+      id: 18,
+      email: 'svezhas@mail.ru',
+      name: 'Свежов Андрей Сергеевич',
       isActive: true,
       comps: [],
     ),
     User(
-      id: 5,
-      email: 'mail4@mail.ml',
-      name: 'userName5',
+      id: 19,
+      email: 'svezhss@mail.ru',
+      name: 'Свежов Сергей Семёнович',
       isActive: true,
       comps: [],
     ),
     User(
-      id: 5,
-      email: 'mail4@mail.ml',
-      name: 'userName5',
+      id: 20,
+      email: 'cuminevsemenmaster@mail.ru',
+      name: 'Каменев Семён Мастерович',
       isActive: true,
       comps: [],
     ),
     User(
-      id: 5,
-      email: 'mail4@mail.ml',
-      name: 'userName5',
+      id: 21,
+      email: 'svezhsr@mail.ru',
+      name: 'Свежов Семён Романович',
       isActive: true,
       comps: [],
     ),
     User(
-      id: 5,
-      email: 'mail4@mail.ml',
-      name: 'userName5',
+      id: 22,
+      email: 'svezhrn@mail.ru',
+      name: 'Свежов Роман Николаевич',
       isActive: true,
       comps: [],
     ),
     User(
-      id: 5,
-      email: 'mail4@mail.ml',
-      name: 'userName5',
+      id: 23,
+      email: 'svezhnn@mail.ru',
+      name: 'Свежов Никита Николаевич',
       isActive: true,
       comps: [],
     ),
     User(
-      id: 5,
-      email: 'mail4@mail.ml',
-      name: 'userName5',
+      id: 24,
+      email: 'svezhnr@mail.ru',
+      name: 'Свежов Никита Романович',
       isActive: true,
       comps: [],
     ),
@@ -338,7 +338,7 @@ class AdminController extends GetxController {
   var compList = [
     Competency(
       id: 1,
-      name: 'competency1',
+      name: 'C#',
       levels: [
         Level(
             id: 1,
@@ -365,7 +365,7 @@ class AdminController extends GetxController {
     ),
     Competency(
       id: 2,
-      name: 'competency2',
+      name: 'Java',
       levels: [
         Level(
             id: 2,
@@ -392,7 +392,7 @@ class AdminController extends GetxController {
     ),
     Competency(
       id: 3,
-      name: 'competency3',
+      name: 'C++',
       levels: [
         Level(
             id: 3,
@@ -419,7 +419,7 @@ class AdminController extends GetxController {
     ),
     Competency(
       id: 4,
-      name: 'competency4',
+      name: 'DevOps',
       levels: [
         Level(
             id: 4,
@@ -446,7 +446,7 @@ class AdminController extends GetxController {
     ),
     Competency(
       id: 5,
-      name: 'competency5',
+      name: 'Data Analyst',
       levels: [
         Level(
             id: 5,
@@ -473,7 +473,7 @@ class AdminController extends GetxController {
     ),
     Competency(
       id: 6,
-      name: 'competency6',
+      name: 'Тестирование',
       levels: [
         Level(
             id: 6,

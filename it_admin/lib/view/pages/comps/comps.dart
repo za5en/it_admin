@@ -226,7 +226,8 @@ class _CompsState extends State<Comps> {
                                               padding: const EdgeInsets.only(
                                                   left: 30.0, right: 30.0),
                                               child: Text(
-                                                pageList[index].name ?? 'user',
+                                                pageList[index].name ??
+                                                    'competency',
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .titleLarge
@@ -256,30 +257,33 @@ class _CompsState extends State<Comps> {
                                                   context,
                                                   'Введите название компетенции:',
                                                   false);
-                                              var id = pageList[index].id;
-                                              setState(() {
-                                                pageList[index].name =
-                                                    name != ''
-                                                        ? name
-                                                        : pageList[index].name;
-                                              });
-                                              for (var i = 0;
-                                                  i <
+                                              if (name != null) {
+                                                var id = pageList[index].id;
+                                                setState(() {
+                                                  pageList[index].name = name !=
+                                                          ''
+                                                      ? name
+                                                      : pageList[index].name;
+                                                });
+                                                for (var i = 0;
+                                                    i <
+                                                        adminController
+                                                            .compList.length;
+                                                    i++) {
+                                                  if (adminController
+                                                          .compList[i].id ==
+                                                      id) {
+                                                    setState(() {
                                                       adminController
-                                                          .compList.length;
-                                                  i++) {
-                                                if (adminController
-                                                        .compList[i].id ==
-                                                    id) {
-                                                  setState(() {
-                                                    adminController
-                                                            .compList[i].name =
-                                                        name != ''
-                                                            ? name
-                                                            : adminController
-                                                                .compList[i]
-                                                                .name;
-                                                  });
+                                                              .compList[i]
+                                                              .name =
+                                                          name != ''
+                                                              ? name
+                                                              : adminController
+                                                                  .compList[i]
+                                                                  .name;
+                                                    });
+                                                  }
                                                 }
                                               }
                                             },
@@ -469,47 +473,69 @@ class _CompsState extends State<Comps> {
                 onPressed: () async {
                   var name = await editDialog(
                       context, 'Введите название компетенции:', true);
-                  var newComp = Competency(
-                      id: adminController.compList.last.id + 1,
-                      levels: [
-                        Level(
-                          id: adminController.compList.last.id + 1,
-                          skills: [
-                            Skill(
-                                id: adminController.compList.last.id + 1,
-                                skillName: 'skill1',
-                                fileInfo: {1: 'filename.md'})
-                          ],
-                          levelName: 'level1',
-                          priority: 1,
-                          tests: [
-                            Test(
-                              id: 1,
-                              testQs: [
-                                'Вопрос 1',
-                                'Вопрос 2',
-                                'Вопрос 3',
-                                'Вопрос 4'
-                              ],
-                              testAns: {
-                                1: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
-                                2: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
-                                3: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
-                                4: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4']
-                              },
-                              testCorr: [2, 3, 1, 2],
-                              testTime: 15,
-                            )
-                          ],
-                        )
-                      ],
-                      name: name);
-                  setState(() {
-                    if (page == pages && pageList.length < 10) {
-                      pageList.add(newComp);
-                    }
-                    adminController.compList.add(newComp);
-                  });
+                  if (name != null) {
+                    var newComp = Competency(
+                        id: adminController.compList.last.id + 1,
+                        levels: [
+                          Level(
+                            id: adminController.compList.last.id + 1,
+                            skills: [
+                              Skill(
+                                  id: adminController.compList.last.id + 1,
+                                  skillName: 'skill1',
+                                  fileInfo: {1: 'filename.md'})
+                            ],
+                            levelName: 'level1',
+                            priority: 1,
+                            tests: [
+                              Test(
+                                id: 1,
+                                testQs: [
+                                  'Вопрос 1',
+                                  'Вопрос 2',
+                                  'Вопрос 3',
+                                  'Вопрос 4'
+                                ],
+                                testAns: {
+                                  1: [
+                                    'Ответ 1',
+                                    'Ответ 2',
+                                    'Ответ 3',
+                                    'Ответ 4'
+                                  ],
+                                  2: [
+                                    'Ответ 1',
+                                    'Ответ 2',
+                                    'Ответ 3',
+                                    'Ответ 4'
+                                  ],
+                                  3: [
+                                    'Ответ 1',
+                                    'Ответ 2',
+                                    'Ответ 3',
+                                    'Ответ 4'
+                                  ],
+                                  4: [
+                                    'Ответ 1',
+                                    'Ответ 2',
+                                    'Ответ 3',
+                                    'Ответ 4'
+                                  ]
+                                },
+                                testCorr: [2, 3, 1, 2],
+                                testTime: 15,
+                              )
+                            ],
+                          )
+                        ],
+                        name: name);
+                    setState(() {
+                      if (page == pages && pageList.length < 10) {
+                        pageList.add(newComp);
+                      }
+                      adminController.compList.add(newComp);
+                    });
+                  }
                 },
               ),
               Padding(
@@ -572,11 +598,11 @@ class _CompsState extends State<Comps> {
         });
   }
 
-  Future<String> editDialog(context, message, create) async {
+  Future<String?> editDialog(context, message, create) async {
     var newCompName = await showDialog(
         context: context,
         builder: (BuildContext context) {
-          String newName = '';
+          String? newName;
           return AlertDialog(
             backgroundColor: Theme.of(context).colorScheme.onTertiaryContainer,
             title: Padding(
@@ -631,7 +657,7 @@ class _CompsState extends State<Comps> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   getButton('Отмена', () {
-                    Navigator.pop(context, '');
+                    Navigator.pop(context);
                   }),
                   getButton('Ок', () {
                     Navigator.pop(context, newName);

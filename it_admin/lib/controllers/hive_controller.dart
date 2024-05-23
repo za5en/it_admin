@@ -7,7 +7,7 @@ class HiveController {
     await Hive.openBox('settings');
     await Hive.openBox('user');
 
-    Hive.box('user').put('login', 'adminadmin');
+    Hive.box('user').put('login', 'admin');
     Hive.box('user').put('password', '123mnO!1');
     // await Hive.openBox<Competency>('competencies');
   }
