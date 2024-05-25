@@ -6,9 +6,7 @@ import 'package:it_admin/view/pages/users/user_comps.dart';
 
 import '../../../controllers/admin_controller.dart';
 import '../../widgets/a_app_bar.dart';
-import '../../widgets/a_drop_down.dart';
 import '../../widgets/a_elevated_button.dart';
-import '../../widgets/a_pop_up.dart';
 import '../../widgets/a_svg_icon.dart';
 import '../login.dart';
 
@@ -20,11 +18,11 @@ class Users extends StatefulWidget {
 }
 
 class _UsersState extends State<Users> {
-  var name = 'Имя пользователя';
   var page = 1;
   var adminController = Get.find<AdminController>();
   var pageList = [];
   bool filter = false;
+  var search = '';
   @override
   Widget build(BuildContext context) {
     int pages = adminController.userList.length ~/ 10 + 1;
@@ -37,14 +35,6 @@ class _UsersState extends State<Users> {
               .getRange(10 * (page - 1), 10 * page)
               .toList();
     }
-
-    var userList = ['Имя пользователя'];
-    List<String> userNames = [];
-    for (var i = 0; i < adminController.userList.length; i++) {
-      userNames.add(adminController.userList[i].name ?? 'user');
-    }
-    userNames = userNames.toSet().toList();
-    userList.addAll(userNames);
 
     double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
@@ -110,84 +100,92 @@ class _UsersState extends State<Users> {
                     padding: EdgeInsets.only(left: w * 0.008, top: 15),
                     child: Align(
                       alignment: Alignment.centerLeft,
-                      child: ParamWithDropDown(
-                        popupSize: MediaQuery.of(context).size.width * 0.1,
-                        popupMenuButton: Container(
-                          width: 400,
-                          decoration: BoxDecoration(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .onSecondaryContainer,
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(25)),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(left: 15.0),
-                                child: Text(name,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .titleLarge
-                                        ?.copyWith(fontSize: 20)),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(right: 15.0),
-                                child: ASvgIcon(
-                                  assetName: 'assets/images/triangle.svg',
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onTertiaryContainer,
-                                  height: 28,
+                      child: Container(
+                        padding: EdgeInsets.only(left: w * 0.007),
+                        margin: EdgeInsets.symmetric(vertical: w * 0.008),
+                        width: 400,
+                        decoration: BoxDecoration(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSecondaryContainer,
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(25)),
+                        ),
+                        child: TextFormField(
+                          onChanged: (val) {
+                            setState(() {
+                              search = val;
+                            });
+                          },
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyLarge
+                              ?.copyWith(fontSize: 20),
+                          cursorColor: Colors.grey,
+                          decoration: InputDecoration(
+                            hintText: 'Имя пользователя',
+                            hintStyle: Theme.of(context)
+                                .textTheme
+                                .titleLarge
+                                ?.copyWith(fontSize: 20),
+                            border: InputBorder.none,
+                            suffixIcon: Padding(
+                              padding: const EdgeInsets.only(right: 10.0),
+                              child: InkWell(
+                                child: Image.asset(
+                                  'assets/images/search.png',
+                                  height: 15.0,
                                 ),
-                              )
-                            ],
+                                onTap: () {
+                                  // var userList = adminController.getUsers();
+                                  setState(() {
+                                    if (search != '') {
+                                      setState(() {
+                                        pageList = adminController
+                                                    .userList.length <
+                                                10 * page
+                                            ? adminController.userList
+                                                .getRange(
+                                                    10 * (page - 1),
+                                                    adminController
+                                                        .userList.length)
+                                                .toList()
+                                            : adminController.userList
+                                                .getRange(
+                                                    10 * (page - 1), 10 * page)
+                                                .toList();
+                                        pageList = pageList
+                                            .where((element) => element.name
+                                                .toString()
+                                                .toLowerCase()
+                                                .contains(search.toLowerCase()))
+                                            .toList();
+                                        filter = true;
+                                      });
+                                    } else {
+                                      setState(() {
+                                        pageList = adminController
+                                                    .userList.length <
+                                                10 * page
+                                            ? adminController.userList
+                                                .getRange(
+                                                    10 * (page - 1),
+                                                    adminController
+                                                        .userList.length)
+                                                .toList()
+                                            : adminController.userList
+                                                .getRange(
+                                                    10 * (page - 1), 10 * page)
+                                                .toList();
+                                        filter = false;
+                                      });
+                                    }
+                                  });
+                                },
+                              ),
+                            ),
                           ),
                         ),
-                        onSelected: (value) {
-                          // var userList = adminController.getUsers();
-                          setState(() {
-                            name = userList[value];
-                            if (name != 'Имя пользователя') {
-                              setState(() {
-                                pageList = adminController.userList.length <
-                                        10 * page
-                                    ? adminController.userList
-                                        .getRange(10 * (page - 1),
-                                            adminController.userList.length)
-                                        .toList()
-                                    : adminController.userList
-                                        .getRange(10 * (page - 1), 10 * page)
-                                        .toList();
-                                pageList = pageList
-                                    .where((element) => element.name == name)
-                                    .toList();
-                                filter = true;
-                              });
-                            } else {
-                              setState(() {
-                                pageList = adminController.userList.length <
-                                        10 * page
-                                    ? adminController.userList
-                                        .getRange(10 * (page - 1),
-                                            adminController.userList.length)
-                                        .toList()
-                                    : adminController.userList
-                                        .getRange(10 * (page - 1), 10 * page)
-                                        .toList();
-                                filter = false;
-                              });
-                            }
-                          });
-                        },
-                        popupMenuData: [
-                          for (var i = 0; i < userList.length; i++)
-                            APopupMenuData(
-                              child: Text(userList[i],
-                                  style: Theme.of(context).textTheme.bodyLarge),
-                            ),
-                        ],
                       ),
                     ),
                   ),
@@ -286,30 +284,33 @@ class _UsersState extends State<Users> {
                                               var name = await editDialog(
                                                   context,
                                                   'Изменить имя пользователя ${pageList[index].name}:');
-                                              var id = pageList[index].id;
-                                              setState(() {
-                                                pageList[index].name =
-                                                    name != ''
-                                                        ? name
-                                                        : pageList[index].name;
-                                              });
-                                              for (var i = 0;
-                                                  i <
+                                              if (name != null) {
+                                                var id = pageList[index].id;
+                                                setState(() {
+                                                  pageList[index].name = name !=
+                                                          ''
+                                                      ? name
+                                                      : pageList[index].name;
+                                                });
+                                                for (var i = 0;
+                                                    i <
+                                                        adminController
+                                                            .userList.length;
+                                                    i++) {
+                                                  if (adminController
+                                                          .userList[i].id ==
+                                                      id) {
+                                                    setState(() {
                                                       adminController
-                                                          .userList.length;
-                                                  i++) {
-                                                if (adminController
-                                                        .userList[i].id ==
-                                                    id) {
-                                                  setState(() {
-                                                    adminController
-                                                            .userList[i].name =
-                                                        name != ''
-                                                            ? name
-                                                            : adminController
-                                                                .userList[i]
-                                                                .name;
-                                                  });
+                                                              .userList[i]
+                                                              .name =
+                                                          name != ''
+                                                              ? name
+                                                              : adminController
+                                                                  .userList[i]
+                                                                  .name;
+                                                    });
+                                                  }
                                                 }
                                               }
                                             },
@@ -374,7 +375,7 @@ class _UsersState extends State<Users> {
                           setState(() {
                             page = 1;
                             filter = false;
-                            name = 'Имя пользователя';
+                            search = '';
                           });
                         },
                       ),
@@ -413,7 +414,7 @@ class _UsersState extends State<Users> {
                             setState(() {
                               page = i;
                               filter = false;
-                              name = 'Имя пользователя';
+                              search = '';
                             });
                           },
                         ),
@@ -445,7 +446,7 @@ class _UsersState extends State<Users> {
                             setState(() {
                               page = i;
                               filter = false;
-                              name = 'Имя пользователя';
+                              search = '';
                             });
                           },
                         ),
@@ -480,7 +481,7 @@ class _UsersState extends State<Users> {
                           setState(() {
                             page = pages;
                             filter = false;
-                            name = 'Имя пользователя';
+                            search = '';
                           });
                         },
                       ),
@@ -547,11 +548,11 @@ class _UsersState extends State<Users> {
         });
   }
 
-  Future<String> editDialog(context, message) async {
+  Future<String?> editDialog(context, message) async {
     var newUserName = await showDialog(
         context: context,
         builder: (BuildContext context) {
-          String newName = '';
+          String? newName;
           return AlertDialog(
             backgroundColor: Theme.of(context).colorScheme.onTertiaryContainer,
             title: Padding(
@@ -587,7 +588,7 @@ class _UsersState extends State<Users> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   getButton('Отмена', () {
-                    Navigator.pop(context, '');
+                    Navigator.pop(context);
                   }),
                   getButton('Ок', () {
                     Navigator.pop(context, newName);
