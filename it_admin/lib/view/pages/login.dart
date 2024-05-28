@@ -165,6 +165,7 @@ class LoginTextField extends StatelessWidget {
     required this.enabled,
     this.validator,
     this.passwordField = false,
+    this.width,
   });
   final String text;
   final Widget? suffixIcon;
@@ -172,13 +173,14 @@ class LoginTextField extends StatelessWidget {
   final bool enabled;
   final String? Function(String?)? validator;
   final bool passwordField;
+  final double? width;
   @override
   Widget build(BuildContext context) {
     double w = MediaQuery.of(context).size.width;
     return Container(
       padding: EdgeInsets.only(left: w * 0.007),
       margin: EdgeInsets.symmetric(vertical: w * 0.008),
-      width: w * 0.45,
+      width: width ?? w * 0.45,
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.onSecondaryContainer,
       ),

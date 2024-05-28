@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:it_admin/data/competency.dart';
+import 'package:it_admin/view/pages/comps/skills.dart';
 
 import '../../../controllers/admin_controller.dart';
 import '../../../data/level.dart';
@@ -13,6 +14,7 @@ import '../../widgets/a_elevated_button.dart';
 import '../../widgets/a_pop_up.dart';
 import '../../widgets/a_svg_icon.dart';
 import '../login.dart';
+import 'create_comp.dart';
 
 class Comps extends StatefulWidget {
   const Comps({super.key});
@@ -27,6 +29,7 @@ class _CompsState extends State<Comps> {
   var adminController = Get.find<AdminController>();
   var pageList = [];
   bool filter = false;
+  List<int> priority = [-1, 1, 2, 3, 4, 5];
   @override
   Widget build(BuildContext context) {
     int pages = adminController.compList.length ~/ 10 + 1;
@@ -236,6 +239,76 @@ class _CompsState extends State<Comps> {
                                             ),
                                             onTap: () {
                                               setState(() {
+                                                if (pageList[index]
+                                                        .levels
+                                                        .length >
+                                                    0) {
+                                                  Get.to(() => Skills(
+                                                      compId:
+                                                          pageList[index].id,
+                                                      level: pageList[index]
+                                                          .levels[0]));
+                                                } else {
+                                                  Get.to(() => Skills(
+                                                      compId: 1,
+                                                      level: Level(
+                                                          id: 1,
+                                                          skills: [
+                                                            Skill(
+                                                                id: 1,
+                                                                skillName:
+                                                                    'skill1',
+                                                                fileInfo: {
+                                                                  1: 'filename.md'
+                                                                })
+                                                          ],
+                                                          levelName: 'level1',
+                                                          priority: 1,
+                                                          tests: [
+                                                            Test(
+                                                              id: 1,
+                                                              testQs: [
+                                                                'Вопрос 1',
+                                                                'Вопрос 2',
+                                                                'Вопрос 3',
+                                                                'Вопрос 4'
+                                                              ],
+                                                              testAns: {
+                                                                1: [
+                                                                  'Ответ 1',
+                                                                  'Ответ 2',
+                                                                  'Ответ 3',
+                                                                  'Ответ 4'
+                                                                ],
+                                                                2: [
+                                                                  'Ответ 1',
+                                                                  'Ответ 2',
+                                                                  'Ответ 3',
+                                                                  'Ответ 4'
+                                                                ],
+                                                                3: [
+                                                                  'Ответ 1',
+                                                                  'Ответ 2',
+                                                                  'Ответ 3',
+                                                                  'Ответ 4'
+                                                                ],
+                                                                4: [
+                                                                  'Ответ 1',
+                                                                  'Ответ 2',
+                                                                  'Ответ 3',
+                                                                  'Ответ 4'
+                                                                ]
+                                                              },
+                                                              testCorr: [
+                                                                2,
+                                                                3,
+                                                                1,
+                                                                2
+                                                              ],
+                                                              testTime: 15,
+                                                            )
+                                                          ])));
+                                                }
                                                 //unhide levels (bool)
                                               });
                                             },
@@ -642,8 +715,7 @@ class _CompsState extends State<Comps> {
                                     decoration: TextDecoration.underline),
                           ),
                           onTap: () {
-                            Navigator.pop(context);
-                            // Get.to(() => CreateComp());
+                            Get.to(() => const CreateComp());
                           },
                         ),
                       ),
@@ -667,6 +739,112 @@ class _CompsState extends State<Comps> {
           );
         });
     return newCompName;
+  }
+
+  Future<List<String>?> levelDialog(context, message, levelPriority) async {
+    var newLevelData = await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          List<String>? newData;
+          return AlertDialog(
+            backgroundColor: Theme.of(context).colorScheme.onTertiaryContainer,
+            title: Padding(
+                padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.width * 0.01,
+                ),
+                child: SizedBox(
+                  height: 200,
+                  width: 800,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        message,
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyLarge
+                            ?.copyWith(fontSize: 25),
+                      ),
+                      LoginTextField(
+                        text: 'Название',
+                        onChanged: (p0) => newData!.isEmpty
+                            ? newData?.add(p0)
+                            : newData?[0] = p0,
+                        enabled: true,
+                      ),
+                      ParamWithDropDown(
+                        popupSize: MediaQuery.of(context).size.width * 0.1,
+                        popupMenuButton: Container(
+                          width: MediaQuery.of(context).size.width * 0.5,
+                          decoration: BoxDecoration(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSecondaryContainer),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(left: 15.0),
+                                child: Text(
+                                    levelPriority == -1
+                                        ? 'Приоритет'
+                                        : levelPriority.toString(),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleLarge
+                                        ?.copyWith(fontSize: 20)),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(right: 15.0),
+                                child: ASvgIcon(
+                                  assetName: 'assets/images/triangle.svg',
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onTertiaryContainer,
+                                  height: 28,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        onSelected: (value) {
+                          setState(() {
+                            levelPriority = priority[value];
+                            (p0) => newData!.isEmpty
+                                ? newData = ['', p0.toString()]
+                                : newData?[1] = p0.toString();
+                          });
+                        },
+                        popupMenuData: [
+                          for (var i = 0; i < priority.length; i++)
+                            APopupMenuData(
+                              child: Text(
+                                  i == 0 ? 'Приоритет' : priority[i].toString(),
+                                  style: Theme.of(context).textTheme.bodyLarge),
+                            ),
+                        ],
+                      ),
+                    ],
+                  ),
+                )),
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(25)),
+            ),
+            content: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  getButton('Отмена', () {
+                    Navigator.pop(context);
+                  }),
+                  getButton('Ок', () {
+                    Navigator.pop(context, newData);
+                  }),
+                ]),
+            actionsAlignment: MainAxisAlignment.spaceAround,
+          );
+        });
+    return newLevelData;
   }
 
   Widget getButton(String text, Function() onPressed) => Container(
