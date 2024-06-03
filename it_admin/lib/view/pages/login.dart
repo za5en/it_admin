@@ -156,7 +156,7 @@ class _LoginState extends State<Login> {
   }
 }
 
-class LoginTextField extends StatelessWidget {
+class LoginTextField extends StatefulWidget {
   const LoginTextField({
     super.key,
     required this.text,
@@ -174,31 +174,56 @@ class LoginTextField extends StatelessWidget {
   final String? Function(String?)? validator;
   final bool passwordField;
   final double? width;
+
+  @override
+  State<LoginTextField> createState() => _LoginTextFieldState();
+}
+
+class _LoginTextFieldState extends State<LoginTextField> {
+  var isVisible = false;
+
   @override
   Widget build(BuildContext context) {
     double w = MediaQuery.of(context).size.width;
     return Container(
       padding: EdgeInsets.only(left: w * 0.007),
       margin: EdgeInsets.symmetric(vertical: w * 0.008),
-      width: width ?? w * 0.45,
+      width: widget.width ?? w * 0.45,
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.onSecondaryContainer,
       ),
       child: TextFormField(
-        autocorrect: !passwordField,
-        enableSuggestions: !passwordField,
-        obscureText: passwordField,
-        enabled: enabled,
-        validator: validator,
-        onChanged: onChanged,
+        autocorrect: !widget.passwordField,
+        enableSuggestions: !widget.passwordField,
+        obscureText: widget.passwordField ? !isVisible : false,
+        enabled: widget.enabled,
+        validator: widget.validator,
+        onChanged: widget.onChanged,
         style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontSize: 20),
         cursorColor: Colors.grey,
         decoration: InputDecoration(
-          hintText: text,
+          hintText: widget.text,
           hintStyle:
               Theme.of(context).textTheme.titleLarge?.copyWith(fontSize: 20),
           border: InputBorder.none,
-          suffixIcon: suffixIcon,
+          suffixIcon: widget.passwordField
+              ? InkWell(
+                  child: isVisible
+                      ? Icon(Icons.remove_red_eye_rounded,
+                          color:
+                              Theme.of(context).textTheme.headlineMedium!.color)
+                      : Icon(Icons.remove_red_eye_outlined,
+                          color: Theme.of(context)
+                              .textTheme
+                              .headlineMedium!
+                              .color),
+                  onTap: () {
+                    setState(() {
+                      isVisible = !isVisible;
+                    });
+                  },
+                )
+              : widget.suffixIcon,
         ),
       ),
     );

@@ -23,7 +23,7 @@ class AAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       centerTitle: true,
       title: title,
-      leading: leading,
+      leading: leading ?? const SizedBox(),
       toolbarHeight: toolbarHeight,
       actions: actions,
       leadingWidth: nonDefWidth != null ? 200 : null,

@@ -315,25 +315,25 @@ class _UsersState extends State<Users> {
                                               }
                                             },
                                           ),
-                                          const SizedBox(
-                                            width: 30.0,
-                                          ),
-                                          InkWell(
-                                            child: Image.asset(
-                                              'assets/images/report.png',
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .primary,
-                                              height: 45,
-                                            ),
-                                            onTap: () {
-                                              alertDialog(context,
-                                                  'Составить отчёт по пользователю ${pageList[index].name} и скачать его?',
-                                                  () {
-                                                Navigator.pop(context);
-                                              });
-                                            },
-                                          ),
+                                          // const SizedBox(
+                                          //   width: 30.0,
+                                          // ),
+                                          // InkWell(
+                                          //   child: Image.asset(
+                                          //     'assets/images/report.png',
+                                          //     color: Theme.of(context)
+                                          //         .colorScheme
+                                          //         .primary,
+                                          //     height: 45,
+                                          //   ),
+                                          //   onTap: () {
+                                          //     alertDialog(context,
+                                          //         'Составить отчёт по пользователю ${pageList[index].name} и скачать его?',
+                                          //         () {
+                                          //       Navigator.pop(context);
+                                          //     });
+                                          //   },
+                                          // ),
                                         ],
                                       ),
                                     ],

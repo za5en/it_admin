@@ -31,6 +31,7 @@ class _CreateCompState extends State<CreateComp> {
         priority: 2,
         tests: [])
   ];
+  List<Skill> skills = [];
   List<int> priority = [-1, 1, 2, 3, 4, 5];
   List<String> files = ['readme.md', 'lesson1.md', 'lesson2.md'];
 
@@ -79,8 +80,11 @@ class _CreateCompState extends State<CreateComp> {
                               child: Image.asset('assets/images/close.png',
                                   height: 35.0),
                               onTap: () {
-                                Navigator.pop(context);
-                                //open dialog
+                                alertDialog(context, 'Выйти без сохранения?',
+                                    () {
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                }, false);
                               },
                             )),
                       ),
@@ -101,8 +105,23 @@ class _CreateCompState extends State<CreateComp> {
                               child: Image.asset('assets/images/save.png',
                                   height: 35.0),
                               onTap: () {
-                                Navigator.pop(context);
-                                //open dialog
+                                if (compName != '' &&
+                                    levels.isNotEmpty &&
+                                    skills.isNotEmpty &&
+                                    files.isNotEmpty) {
+                                  alertDialog(context, 'Сохранить и выйти?',
+                                      () {
+                                    Navigator.pop(context);
+                                    Navigator.pop(context);
+                                    //add to the admincontroller
+                                  }, false);
+                                } else {
+                                  alertDialog(
+                                      context,
+                                      'Нужно добавить хотя бы один уровень и заполнить поля',
+                                      () {},
+                                      true);
+                                }
                               },
                             )),
                       ),
@@ -191,7 +210,11 @@ class _CreateCompState extends State<CreateComp> {
                                             height: 35,
                                           ),
                                           onTap: () {
-                                            // delete level
+                                            alertDialog(
+                                                context, 'Удалить уровень?',
+                                                () {
+                                              Navigator.pop(context);
+                                            }, false);
                                           },
                                         ),
                                       ),
@@ -312,10 +335,11 @@ class _CreateCompState extends State<CreateComp> {
                                   // visible: levels.isNotEmpty,
                                   child: SizedBox(
                                     height:
-                                        levels.length * 500, //swap to skills
+                                        (levels[index].skills?.length ?? 1) *
+                                            410,
                                     child: ListView.builder(
                                         itemCount:
-                                            levels.length, //swap to skills
+                                            (levels[index].skills?.length ?? 1),
                                         itemBuilder: (context, index) {
                                           return Padding(
                                             padding: EdgeInsets.only(
@@ -382,7 +406,13 @@ class _CreateCompState extends State<CreateComp> {
                                                               height: 35,
                                                             ),
                                                             onTap: () {
-                                                              // delete skill
+                                                              alertDialog(
+                                                                  context,
+                                                                  'Удалить навык?',
+                                                                  () {
+                                                                Navigator.pop(
+                                                                    context);
+                                                              }, false);
                                                             },
                                                           ),
                                                         ),
@@ -490,7 +520,7 @@ class _CreateCompState extends State<CreateComp> {
                                                                                       onTap: () {
                                                                                         alertDialog(context, 'Удалить файл?', () {
                                                                                           Navigator.pop(context);
-                                                                                        });
+                                                                                        }, false);
                                                                                       },
                                                                                     ),
                                                                                   ),
@@ -549,13 +579,15 @@ class _CreateCompState extends State<CreateComp> {
                                   pad: false,
                                   onPressed: () async {
                                     setState(() {
-                                      levels[index].skills?.add(Skill(
+                                      var skill = Skill(
                                           id: levels[index].skills!.isNotEmpty
                                               ? levels[index].skills!.last.id +
                                                   1
                                               : 1,
                                           skillName: '',
-                                          fileInfo: {}));
+                                          fileInfo: {});
+                                      levels[index].skills?.add(skill);
+                                      skills.add(skill);
                                     });
                                   },
                                 ),
@@ -570,14 +602,14 @@ class _CreateCompState extends State<CreateComp> {
                                     width: w * 0.9,
                                     pad: false,
                                     onPressed: () async {
-                                      setState(() async {
+                                      setState(() {
                                         var test = Test(
                                             id: levels[index].id,
                                             testQs: [],
                                             testAns: {},
                                             testCorr: [],
                                             testTime: 10);
-                                        await Get.to(() => TestPage(
+                                        Get.to(() => TestPage(
                                             test: test,
                                             levelName:
                                                 levels[index].levelName ??
@@ -630,7 +662,7 @@ class _CreateCompState extends State<CreateComp> {
     );
   }
 
-  alertDialog(context, message, onPressed) {
+  alertDialog(context, message, onPressed, error) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -660,14 +692,22 @@ class _CreateCompState extends State<CreateComp> {
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(25)),
             ),
-            content: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  getButton('Нет', () {
-                    Navigator.pop(context);
-                  }),
-                  getButton('Да', onPressed),
-                ]),
+            content: error
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                        getButton('Ок', () {
+                          Navigator.pop(context);
+                        }),
+                      ])
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                        getButton('Нет', () {
+                          Navigator.pop(context);
+                        }),
+                        getButton('Да', onPressed),
+                      ]),
             actionsAlignment: MainAxisAlignment.spaceAround,
           );
         });

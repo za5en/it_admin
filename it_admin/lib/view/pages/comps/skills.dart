@@ -22,6 +22,7 @@ class Skills extends StatefulWidget {
 
 class _SkillsState extends State<Skills> {
   var adminController = Get.find<AdminController>();
+  var levelName = '';
   @override
   Widget build(BuildContext context) {
     List<Skill> skills = [];
@@ -84,8 +85,11 @@ class _SkillsState extends State<Skills> {
                                 height: 35.0,
                               ),
                               onTap: () {
-                                Navigator.pop(context);
-                                //open dialog
+                                alertDialog(context, 'Выйти без сохранения?',
+                                    () {
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                });
                               },
                             )),
                       ),
@@ -93,7 +97,10 @@ class _SkillsState extends State<Skills> {
                         padding: const EdgeInsets.only(top: 15.0),
                         child: Row(
                           children: [
-                            Text(widget.level.levelName ?? 'level',
+                            Text(
+                                levelName != ''
+                                    ? levelName
+                                    : widget.level.levelName ?? 'уровень',
                                 style: Theme.of(context)
                                     .textTheme
                                     .bodyLarge
@@ -110,7 +117,30 @@ class _SkillsState extends State<Skills> {
                                 var name = await editDialog(
                                     context, 'Введите название уровня:');
                                 if (name != null) {
-                                  //edit level name
+                                  setState(() {
+                                    levelName = name;
+                                    bool found = false;
+                                    for (var i = 0;
+                                        i < adminController.compList.length &&
+                                            !found;
+                                        i++) {
+                                      for (var j = 0;
+                                          j <
+                                                  (adminController.compList[i]
+                                                          .levels?.length ??
+                                                      0) &&
+                                              !found;
+                                          j++) {
+                                        if (adminController
+                                                .compList[i].levels?[j].id ==
+                                            widget.level.id) {
+                                          adminController.compList[i].levels?[j]
+                                              .levelName = name;
+                                          found = true;
+                                        }
+                                      }
+                                    }
+                                  });
                                 }
                               },
                             ),
@@ -127,8 +157,11 @@ class _SkillsState extends State<Skills> {
                                 height: 35.0,
                               ),
                               onTap: () {
-                                Navigator.pop(context);
-                                //open dialog
+                                alertDialog(context, 'Сохранить и выйти?', () {
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                  //add to the admincontroller
+                                });
                               },
                             )),
                       ),
@@ -198,7 +231,49 @@ class _SkillsState extends State<Skills> {
                                                   context,
                                                   'Введите название навыка:');
                                               if (name != null) {
-                                                //edit skill name
+                                                setState(() {
+                                                  skills[index].skillName =
+                                                      name;
+                                                  bool found = false;
+                                                  for (var i = 0;
+                                                      i <
+                                                              adminController
+                                                                  .compList
+                                                                  .length &&
+                                                          !found;
+                                                      i++) {
+                                                    for (var j = 0;
+                                                        j <
+                                                                (adminController
+                                                                        .compList[
+                                                                            i]
+                                                                        .levels
+                                                                        ?.length ??
+                                                                    0) &&
+                                                            !found;
+                                                        j++) {
+                                                      for (var k = 0;
+                                                          k <
+                                                                  (adminController
+                                                                          .compList[
+                                                                              i]
+                                                                          .levels?[
+                                                                              j]
+                                                                          .skills
+                                                                          ?.length ??
+                                                                      1) &&
+                                                              !found;
+                                                          k++) {
+                                                        found = true;
+                                                        adminController
+                                                            .compList[i]
+                                                            .levels?[j]
+                                                            .skills?[k]
+                                                            .skillName = name;
+                                                      }
+                                                    }
+                                                  }
+                                                });
                                               }
                                             },
                                           ),

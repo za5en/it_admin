@@ -69,8 +69,11 @@ class _TestPageState extends State<TestPage> {
                               child: Image.asset('assets/images/close.png',
                                   height: 35.0),
                               onTap: () {
-                                Navigator.pop(context);
-                                //open dialog
+                                alertDialog(context, 'Выйти без сохранения?',
+                                    () {
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                }, false);
                               },
                             )),
                       ),
@@ -91,8 +94,20 @@ class _TestPageState extends State<TestPage> {
                               child: Image.asset('assets/images/save.png',
                                   height: 35.0),
                               onTap: () {
-                                Navigator.pop(context);
-                                //open dialog
+                                if (questionList.isNotEmpty) {
+                                  alertDialog(context, 'Сохранить и выйти?',
+                                      () {
+                                    Navigator.pop(context);
+                                    Navigator.pop(context);
+                                    //add to the admincontroller
+                                  }, false);
+                                } else {
+                                  alertDialog(
+                                      context,
+                                      'Нужно добавить хотя бы один вопрос и заполнить поля',
+                                      () {},
+                                      true);
+                                }
                               },
                             )),
                       ),
@@ -186,7 +201,10 @@ class _TestPageState extends State<TestPage> {
                                             height: 35,
                                           ),
                                           onTap: () {
-                                            // delete question
+                                            alertDialog(
+                                                context, 'Удалить вопрос?', () {
+                                              Navigator.pop(context);
+                                            }, false);
                                           },
                                         ),
                                       ),
@@ -490,7 +508,7 @@ class _TestPageState extends State<TestPage> {
     );
   }
 
-  alertDialog(context, message, onPressed) {
+  alertDialog(context, message, onPressed, error) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -520,14 +538,22 @@ class _TestPageState extends State<TestPage> {
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(25)),
             ),
-            content: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  getButton('Нет', () {
-                    Navigator.pop(context);
-                  }),
-                  getButton('Да', onPressed),
-                ]),
+            content: error
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                        getButton('Ок', () {
+                          Navigator.pop(context);
+                        }),
+                      ])
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                        getButton('Нет', () {
+                          Navigator.pop(context);
+                        }),
+                        getButton('Да', onPressed),
+                      ]),
             actionsAlignment: MainAxisAlignment.spaceAround,
           );
         });
