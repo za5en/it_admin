@@ -27,9 +27,10 @@ class _CompsState extends State<Comps> {
   var name = 'Название компетенции';
   var page = 1;
   var adminController = Get.find<AdminController>();
-  var pageList = [];
+  List<Competency> pageList = [];
   bool filter = false;
   List<int> priority = [-1, 1, 2, 3, 4, 5];
+  List<int> levelVisibility = [];
   @override
   Widget build(BuildContext context) {
     int pages = adminController.compList.length ~/ 10 + 1;
@@ -201,7 +202,9 @@ class _CompsState extends State<Comps> {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 35.0),
                 child: Container(
-                  height: pageList.length < 10 ? pageList.length * 65 : 650,
+                  height: pageList.length < 10
+                      ? pageList.length * 66 + levelVisibility.length * 121
+                      : levelVisibility.length * 121 + 660,
                   width: w * 0.98,
                   decoration: BoxDecoration(
                     color: Theme.of(context).colorScheme.secondary,
@@ -239,77 +242,12 @@ class _CompsState extends State<Comps> {
                                             ),
                                             onTap: () {
                                               setState(() {
-                                                if (pageList[index]
-                                                        .levels
-                                                        .length >
-                                                    0) {
-                                                  Get.to(() => Skills(
-                                                      compId:
-                                                          pageList[index].id,
-                                                      level: pageList[index]
-                                                          .levels[0]));
+                                                if (levelVisibility
+                                                    .contains(index)) {
+                                                  levelVisibility.remove(index);
                                                 } else {
-                                                  Get.to(() => Skills(
-                                                      compId: 1,
-                                                      level: Level(
-                                                          id: 1,
-                                                          skills: [
-                                                            Skill(
-                                                                id: 1,
-                                                                skillName:
-                                                                    'skill1',
-                                                                fileInfo: {
-                                                                  1: 'filename.md'
-                                                                })
-                                                          ],
-                                                          levelName: 'level1',
-                                                          priority: 1,
-                                                          tests: [
-                                                            Test(
-                                                              id: 1,
-                                                              testQs: [
-                                                                'Вопрос 1',
-                                                                'Вопрос 2',
-                                                                'Вопрос 3',
-                                                                'Вопрос 4'
-                                                              ],
-                                                              testAns: {
-                                                                1: [
-                                                                  'Ответ 1',
-                                                                  'Ответ 2',
-                                                                  'Ответ 3',
-                                                                  'Ответ 4'
-                                                                ],
-                                                                2: [
-                                                                  'Ответ 1',
-                                                                  'Ответ 2',
-                                                                  'Ответ 3',
-                                                                  'Ответ 4'
-                                                                ],
-                                                                3: [
-                                                                  'Ответ 1',
-                                                                  'Ответ 2',
-                                                                  'Ответ 3',
-                                                                  'Ответ 4'
-                                                                ],
-                                                                4: [
-                                                                  'Ответ 1',
-                                                                  'Ответ 2',
-                                                                  'Ответ 3',
-                                                                  'Ответ 4'
-                                                                ]
-                                                              },
-                                                              testCorr: [
-                                                                2,
-                                                                3,
-                                                                1,
-                                                                2
-                                                              ],
-                                                              testTime: 15,
-                                                            )
-                                                          ])));
+                                                  levelVisibility.add(index);
                                                 }
-                                                //unhide levels (bool)
                                               });
                                             },
                                           ),
@@ -389,10 +327,379 @@ class _CompsState extends State<Comps> {
                                   ),
                                 ),
                                 Visibility(
+                                  visible: levelVisibility.contains(index),
+                                  child: const Padding(
+                                    padding: EdgeInsets.only(top: 10.0),
+                                    child: Divider(
+                                      thickness: 0.0,
+                                      height: 1,
+                                    ),
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: levelVisibility.contains(index) &&
+                                      (pageList[index].levels?.isNotEmpty ??
+                                          false),
+                                  child: SizedBox(
+                                    height:
+                                        (pageList[index].levels?.length ?? 0) *
+                                            61,
+                                    child: ListView.builder(
+                                      itemCount:
+                                          (pageList[index].levels?.length ?? 0),
+                                      itemBuilder: (context, j) {
+                                        return Column(
+                                          children: [
+                                            Stack(
+                                              children: [
+                                                Container(
+                                                  height: 60,
+                                                  width: 50,
+                                                  decoration: BoxDecoration(
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .background,
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 50.0),
+                                                  child: Container(
+                                                    height: 60,
+                                                    decoration: BoxDecoration(
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .surface,
+                                                    ),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Row(
+                                                          children: [
+                                                            InkWell(
+                                                              child: Padding(
+                                                                padding: const EdgeInsets
+                                                                        .only(
+                                                                    left: 40.0,
+                                                                    right:
+                                                                        40.0),
+                                                                child: Text(
+                                                                  pageList[index]
+                                                                          .levels?[
+                                                                              j]
+                                                                          .levelName ??
+                                                                      'level',
+                                                                  style: Theme.of(
+                                                                          context)
+                                                                      .textTheme
+                                                                      .titleLarge
+                                                                      ?.copyWith(
+                                                                          fontSize:
+                                                                              30),
+                                                                ),
+                                                              ),
+                                                              onTap: () {
+                                                                Get.to(() => Skills(
+                                                                    compId: pageList[index].id,
+                                                                    level: pageList[index].levels?[j] ??
+                                                                        Level(
+                                                                            id: 1,
+                                                                            skills: [
+                                                                              Skill(id: 1, skillName: 'навык', fileInfo: {
+                                                                                1: 'filename.md'
+                                                                              })
+                                                                            ],
+                                                                            levelName: 'уровень',
+                                                                            priority: 1,
+                                                                            tests: [])));
+                                                              },
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        Row(
+                                                          children: [
+                                                            InkWell(
+                                                              child:
+                                                                  Image.asset(
+                                                                'assets/images/edit.png',
+                                                                color: Theme.of(
+                                                                        context)
+                                                                    .colorScheme
+                                                                    .primary,
+                                                                height: 45,
+                                                              ),
+                                                              onTap: () async {
+                                                                var levelInfo = await levelDialog(
+                                                                    context,
+                                                                    'Уровень:',
+                                                                    pageList[index]
+                                                                            .levels?[j]
+                                                                            .priority ??
+                                                                        1,
+                                                                    false);
+                                                                if (levelInfo !=
+                                                                        null &&
+                                                                    levelInfo
+                                                                        .isNotEmpty &&
+                                                                    (levelInfo[0] !=
+                                                                            '' ||
+                                                                        levelInfo[1] !=
+                                                                            '-1')) {
+                                                                  var id = pageList[
+                                                                          index]
+                                                                      .id;
+                                                                  var levelId =
+                                                                      pageList[
+                                                                              index]
+                                                                          .levels?[
+                                                                              j]
+                                                                          .id;
+                                                                  setState(() {
+                                                                    if (levelInfo[
+                                                                            0] !=
+                                                                        '') {
+                                                                      pageList[
+                                                                              index]
+                                                                          .levels?[
+                                                                              j]
+                                                                          .levelName = levelInfo[0] !=
+                                                                              ''
+                                                                          ? levelInfo[
+                                                                              0]
+                                                                          : pageList[index]
+                                                                              .levels?[j]
+                                                                              .levelName;
+                                                                    }
+                                                                    if (levelInfo[
+                                                                            1] !=
+                                                                        '-1') {
+                                                                      pageList[
+                                                                              index]
+                                                                          .levels?[
+                                                                              j]
+                                                                          .priority = levelInfo[1] !=
+                                                                              '-1'
+                                                                          ? int.tryParse(levelInfo[
+                                                                              1])
+                                                                          : pageList[index]
+                                                                              .levels?[j]
+                                                                              .priority;
+                                                                    }
+                                                                  });
+                                                                  bool find =
+                                                                      false;
+                                                                  for (var i =
+                                                                          0;
+                                                                      i < adminController.compList.length &&
+                                                                          !find;
+                                                                      i++) {
+                                                                    if (adminController
+                                                                            .compList[i]
+                                                                            .id ==
+                                                                        id) {
+                                                                      for (var k =
+                                                                              0;
+                                                                          k < (adminController.compList[i].levels?.length ?? 0) &&
+                                                                              !find;
+                                                                          k++) {
+                                                                        if (adminController.compList[i].levels?[k].id ==
+                                                                            levelId) {
+                                                                          setState(
+                                                                              () {
+                                                                            find =
+                                                                                true;
+                                                                            if (levelInfo[0] !=
+                                                                                '') {
+                                                                              adminController.compList[i].levels?[k].levelName = levelInfo[0] != '' ? levelInfo[0] : adminController.compList[i].levels?[k].levelName;
+                                                                            }
+                                                                            if (levelInfo[1] !=
+                                                                                '-1') {
+                                                                              adminController.compList[i].levels?[k].priority = levelInfo[1] != '-1' ? int.tryParse(levelInfo[1]) : adminController.compList[i].levels?[k].priority;
+                                                                            }
+                                                                          });
+                                                                        }
+                                                                      }
+                                                                    }
+                                                                  }
+                                                                }
+                                                              },
+                                                            ),
+                                                            const SizedBox(
+                                                              width: 30.0,
+                                                            ),
+                                                            Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .only(
+                                                                      right:
+                                                                          15.0),
+                                                              child: InkWell(
+                                                                child:
+                                                                    Image.asset(
+                                                                  'assets/images/bin.png',
+                                                                  color: Theme.of(
+                                                                          context)
+                                                                      .colorScheme
+                                                                      .primary,
+                                                                  height: 35,
+                                                                ),
+                                                                onTap: () {
+                                                                  alertDialog(
+                                                                      context,
+                                                                      'Удалить уровень?',
+                                                                      () {
+                                                                    Navigator.pop(
+                                                                        context);
+                                                                  });
+                                                                },
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            Stack(
+                                              children: [
+                                                Container(
+                                                  height: 1,
+                                                  width: 50,
+                                                  decoration: BoxDecoration(
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .background,
+                                                  ),
+                                                ),
+                                                const Padding(
+                                                  padding: EdgeInsets.only(
+                                                      left: 50.0),
+                                                  child: Divider(
+                                                    thickness: 0.0,
+                                                    height: 1,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: levelVisibility.contains(index) &&
+                                      (pageList[index].levels?.isNotEmpty ??
+                                          false),
+                                  child: Stack(
+                                    children: [
+                                      Container(
+                                        height: 60,
+                                        width: 50,
+                                        decoration: BoxDecoration(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .background,
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 50.0),
+                                        child: Container(
+                                          height: 60,
+                                          decoration: BoxDecoration(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onSecondaryContainer,
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              InkWell(
+                                                child: Text(
+                                                  'Добавить новый уровень',
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyLarge
+                                                      ?.copyWith(fontSize: 30),
+                                                ),
+                                                onTap: () async {
+                                                  var levelInfo =
+                                                      await levelDialog(context,
+                                                          'Уровень:', -1, true);
+                                                  if (levelInfo != null &&
+                                                      levelInfo.isNotEmpty &&
+                                                      levelInfo[0] != '' &&
+                                                      levelInfo[1] != '-1') {
+                                                    var level = Level(
+                                                        id: pageList[index]
+                                                                    .levels
+                                                                    ?.isNotEmpty ??
+                                                                false
+                                                            ? pageList[index]
+                                                                    .levels!
+                                                                    .last
+                                                                    .id +
+                                                                1
+                                                            : 1,
+                                                        levelName: levelInfo[0],
+                                                        skills: [],
+                                                        priority: int.parse(
+                                                            levelInfo[1]),
+                                                        tests: []);
+                                                    setState(() {
+                                                      pageList[index]
+                                                          .levels
+                                                          ?.add(level);
+                                                    });
+                                                    bool find = false;
+                                                    var id = pageList[index].id;
+                                                    for (var i = 0;
+                                                        i <
+                                                                adminController
+                                                                    .compList
+                                                                    .length &&
+                                                            !find;
+                                                        i++) {
+                                                      if (adminController
+                                                              .compList[i].id ==
+                                                          id) {
+                                                        setState(() {
+                                                          find = true;
+                                                          pageList[index]
+                                                              .levels
+                                                              ?.add(level);
+                                                        });
+                                                      }
+                                                    }
+                                                  }
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Visibility(
                                   visible: index < pageList.length - 1,
-                                  child: const Divider(
-                                    thickness: 0.0,
-                                    height: 19,
+                                  child: Padding(
+                                    padding: EdgeInsets.only(
+                                        top: levelVisibility.contains(index)
+                                            ? 0.0
+                                            : 10.0,
+                                        bottom: 10.0),
+                                    child: const Divider(
+                                      thickness: 0.0,
+                                      height: 1,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -741,7 +1048,8 @@ class _CompsState extends State<Comps> {
     return newCompName;
   }
 
-  Future<List<String>?> levelDialog(context, message, levelPriority) async {
+  Future<List<String>?> levelDialog(
+      context, message, levelPriority, create) async {
     var newLevelData = await showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -769,7 +1077,7 @@ class _CompsState extends State<Comps> {
                       LoginTextField(
                         text: 'Название',
                         onChanged: (p0) => newData!.isEmpty
-                            ? newData?.add(p0)
+                            ? newData = [p0, levelPriority.toString()]
                             : newData?[0] = p0,
                         enabled: true,
                       ),
@@ -838,7 +1146,18 @@ class _CompsState extends State<Comps> {
                     Navigator.pop(context);
                   }),
                   getButton('Ок', () {
-                    Navigator.pop(context, newData);
+                    if (create) {
+                      if ((newData?.isNotEmpty ?? false) &&
+                          newData?[0] != '' &&
+                          newData?[1] != '' &&
+                          newData?[1] != '-1') {
+                        Navigator.pop(context, newData);
+                      } else {
+                        Get.snackbar('Ошибка', 'Необходимо заполнить все поля');
+                      }
+                    } else {
+                      Navigator.pop(context, newData);
+                    }
                   }),
                 ]),
             actionsAlignment: MainAxisAlignment.spaceAround,
