@@ -713,6 +713,17 @@ class _SkillsState extends State<Skills> {
                     if (widget.level.tests.isNotEmpty) {
                       Get.to(() => TestPage(
                           test: widget.level.tests[0],
+                          create: false,
+                          levelName: widget.level.levelName ?? 'уровень'));
+                    } else {
+                      Get.to(() => TestPage(
+                          test: Test(
+                              id: widget.level.id,
+                              testQs: [],
+                              testAns: {},
+                              testCorr: [],
+                              testTime: 10),
+                          create: true,
                           levelName: widget.level.levelName ?? 'уровень'));
                     }
                   },

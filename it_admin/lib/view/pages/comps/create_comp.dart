@@ -206,6 +206,9 @@ class _CreateCompState extends State<CreateComp> {
                                                       : 1,
                                                   levels: levels,
                                                   name: compName));
+                                          Navigator.pop(context);
+                                          Navigator.pop(context);
+                                          Navigator.pop(context);
                                         });
                                       } else {
                                         Get.snackbar('Ошибка',
@@ -215,8 +218,6 @@ class _CreateCompState extends State<CreateComp> {
                                       Get.snackbar('Ошибка',
                                           'Для каждого уровня должен быть составлен тест');
                                     }
-                                    Navigator.pop(context);
-                                    Navigator.pop(context);
                                   }, false);
                                 } else {
                                   alertDialog(
@@ -740,20 +741,36 @@ class _CreateCompState extends State<CreateComp> {
                                     width: w * 0.9,
                                     pad: false,
                                     onPressed: () async {
-                                      setState(() {
-                                        var test = Test(
-                                            id: levels[index].id,
-                                            testQs: [],
-                                            testAns: {},
-                                            testCorr: [],
-                                            testTime: 10);
-                                        Get.to(() => TestPage(
-                                            test: test,
+                                      var newTest = Test(
+                                          id: levels[index].id,
+                                          testQs: [],
+                                          testAns: {},
+                                          testCorr: [],
+                                          testTime: 10);
+                                      if (levels[index].tests.isEmpty) {
+                                        await Get.to(() => TestPage(
+                                            test: newTest,
+                                            create: true,
                                             levelName:
                                                 levels[index].levelName ??
-                                                    'level'));
-                                        //return test info
-                                        levels[index].tests.add(test);
+                                                    'уровень'));
+                                      } else {
+                                        await Get.to(() => TestPage(
+                                            test: levels[index].tests[0],
+                                            create: true,
+                                            levelName:
+                                                levels[index].levelName ??
+                                                    'уровень'));
+                                      }
+                                      newTest = adminController.tempTest;
+                                      setState(() {
+                                        if (levels[index].tests.isEmpty) {
+                                          levels[index].tests.add(newTest);
+                                          test.add(newTest);
+                                        } else {
+                                          levels[index].tests[0] = newTest;
+                                          test[0] = newTest;
+                                        }
                                       });
                                     },
                                   ),

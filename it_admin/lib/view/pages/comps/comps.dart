@@ -876,6 +876,10 @@ class _CompsState extends State<Comps> {
                 onPressed: () async {
                   var name = await editDialog(
                       context, 'Введите название компетенции:', true);
+                  setState(() {});
+                  for (var i = 0; i < adminController.compList.length; i++) {
+                    print(adminController.compList[i].name);
+                  }
                   if (name != null) {
                     var newComp = Competency(
                         id: adminController.compList.isNotEmpty
@@ -1046,8 +1050,9 @@ class _CompsState extends State<Comps> {
                                     fontSize: 14,
                                     decoration: TextDecoration.underline),
                           ),
-                          onTap: () {
-                            Get.to(() => const CreateComp());
+                          onTap: () async {
+                            await Get.to(() => const CreateComp());
+                            setState(() {});
                           },
                         ),
                       ),

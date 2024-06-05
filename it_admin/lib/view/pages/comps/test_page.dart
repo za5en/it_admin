@@ -8,10 +8,19 @@ import '../../widgets/a_elevated_button.dart';
 import '../login.dart';
 
 class TestPage extends StatefulWidget {
-  const TestPage({super.key, required this.test, required this.levelName});
+  const TestPage(
+      {super.key,
+      required this.test,
+      required this.levelName,
+      required this.create,
+      this.compId,
+      this.levelId});
 
   final Test test;
   final String levelName;
+  final bool create;
+  final int? compId;
+  final int? levelId;
 
   @override
   State<TestPage> createState() => _TestPageState();
@@ -98,9 +107,65 @@ class _TestPageState extends State<TestPage> {
                                 if (questionList.isNotEmpty) {
                                   alertDialog(context, 'Сохранить и выйти?',
                                       () {
+                                    if (widget.create) {
+                                      adminController.setTest(1, questionList,
+                                          answerList, correctList, testTime);
+                                    } else {
+                                      bool find = false;
+                                      for (var i = 0;
+                                          i < adminController.compList.length &&
+                                              !find;
+                                          i++) {
+                                        if (adminController.compList[i].id ==
+                                            widget.compId) {
+                                          for (var j = 0;
+                                              j <
+                                                      (adminController
+                                                              .compList[i]
+                                                              .levels
+                                                              ?.length ??
+                                                          0) &&
+                                                  !find;
+                                              j++) {
+                                            if (adminController.compList[i]
+                                                    .levels?[j].id ==
+                                                widget.levelId) {
+                                              if (adminController
+                                                      .compList[i]
+                                                      .levels?[j]
+                                                      .tests
+                                                      .isNotEmpty ??
+                                                  false) {
+                                                adminController.compList[i]
+                                                        .levels?[j].tests[0] =
+                                                    (Test(
+                                                        id: adminController
+                                                                .compList[i]
+                                                                .levels?[j]
+                                                                .tests[0]
+                                                                .id ??
+                                                            1,
+                                                        testQs: questionList,
+                                                        testAns: answerList,
+                                                        testCorr: correctList,
+                                                        testTime: testTime));
+                                              } else {
+                                                adminController.compList[i]
+                                                    .levels?[j].tests
+                                                    .add(Test(
+                                                        id: 1,
+                                                        testQs: questionList,
+                                                        testAns: answerList,
+                                                        testCorr: correctList,
+                                                        testTime: testTime));
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
                                     Navigator.pop(context);
                                     Navigator.pop(context);
-                                    //add to the admincontroller
                                   }, false);
                                 } else {
                                   alertDialog(
@@ -179,7 +244,9 @@ class _TestPageState extends State<TestPage> {
                                     children: [
                                       LoginTextField(
                                         width: w * 0.906,
-                                        text: questionList[index],
+                                        text: questionList[index] == ''
+                                            ? 'Вопрос'
+                                            : questionList[index],
                                         onChanged: (p0) =>
                                             questionList[index] = p0,
                                         enabled: true,
@@ -256,8 +323,12 @@ class _TestPageState extends State<TestPage> {
                                                   ?.copyWith(fontSize: 20),
                                               cursorColor: Colors.grey,
                                               decoration: InputDecoration(
-                                                hintText: answerList[
-                                                    answerKeys[index]][0],
+                                                hintText: answerList[answerKeys[
+                                                            index]][0] ==
+                                                        ''
+                                                    ? 'Ответ 1'
+                                                    : answerList[
+                                                        answerKeys[index]][0],
                                                 hintStyle: Theme.of(context)
                                                     .textTheme
                                                     .titleLarge
@@ -316,8 +387,12 @@ class _TestPageState extends State<TestPage> {
                                                   ?.copyWith(fontSize: 20),
                                               cursorColor: Colors.grey,
                                               decoration: InputDecoration(
-                                                hintText: answerList[
-                                                    answerKeys[index]][1],
+                                                hintText: answerList[answerKeys[
+                                                            index]][1] ==
+                                                        ''
+                                                    ? 'Ответ 2'
+                                                    : answerList[
+                                                        answerKeys[index]][1],
                                                 hintStyle: Theme.of(context)
                                                     .textTheme
                                                     .titleLarge
@@ -387,8 +462,12 @@ class _TestPageState extends State<TestPage> {
                                                   ?.copyWith(fontSize: 20),
                                               cursorColor: Colors.grey,
                                               decoration: InputDecoration(
-                                                hintText: answerList[
-                                                    answerKeys[index]][2],
+                                                hintText: answerList[answerKeys[
+                                                            index]][2] ==
+                                                        ''
+                                                    ? 'Ответ 3'
+                                                    : answerList[
+                                                        answerKeys[index]][2],
                                                 hintStyle: Theme.of(context)
                                                     .textTheme
                                                     .titleLarge
@@ -447,8 +526,12 @@ class _TestPageState extends State<TestPage> {
                                                   ?.copyWith(fontSize: 20),
                                               cursorColor: Colors.grey,
                                               decoration: InputDecoration(
-                                                hintText: answerList[
-                                                    answerKeys[index]][3],
+                                                hintText: answerList[answerKeys[
+                                                            index]][3] ==
+                                                        ''
+                                                    ? 'Ответ 4'
+                                                    : answerList[
+                                                        answerKeys[index]][3],
                                                 hintStyle: Theme.of(context)
                                                     .textTheme
                                                     .titleLarge
@@ -497,17 +580,12 @@ class _TestPageState extends State<TestPage> {
                 pad: false,
                 onPressed: () async {
                   setState(() {
-                    questionList.add('Вопрос');
+                    questionList.add('');
                     answerList.addAll({
-                      questionList.length: [
-                        'Ответ 1',
-                        'Ответ 2',
-                        'Ответ 3',
-                        'Ответ 4'
-                      ]
+                      questionList.length: ['', '', '', '']
                     });
                     answerKeys.add(questionList.length);
-                    correctList.add(1);
+                    correctList.add(-1);
                   });
                 },
               ),

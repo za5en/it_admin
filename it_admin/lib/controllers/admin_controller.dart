@@ -500,10 +500,14 @@ class AdminController extends GetxController {
     ),
   ];
 
+  var tempTest =
+      Test(id: 1, testQs: [], testAns: {}, testCorr: [], testTime: 0);
+
   User get user => _userData;
   Competency get comp => _compData;
   List<User> get users => userList;
   List<Competency> get comps => compList;
+  Test get test => tempTest;
 
   AdminController();
 
@@ -517,5 +521,14 @@ class AdminController extends GetxController {
       _userData = User.fromJson(data.data);
       _compData = Competency.fromJson(data.data);
     }
+  }
+
+  void setTest(int id, List<String> testQs, Map testAns, List<int> testCorr,
+      int testTime) {
+    tempTest.id = id;
+    tempTest.testQs = testQs;
+    tempTest.testAns = testAns;
+    tempTest.testCorr = testCorr;
+    tempTest.testTime = testTime;
   }
 }
