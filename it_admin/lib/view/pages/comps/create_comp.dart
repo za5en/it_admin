@@ -1,5 +1,7 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:it_admin/data/competency.dart';
 import 'package:it_admin/data/skill.dart';
 import 'package:it_admin/data/test.dart';
 import 'package:it_admin/view/pages/comps/test_page.dart';
@@ -23,22 +25,32 @@ class CreateComp extends StatefulWidget {
 class _CreateCompState extends State<CreateComp> {
   var adminController = Get.find<AdminController>();
   var compName = '';
-  List<Level> levels = [
-    Level(
-        id: 1,
-        skills: [Skill(id: 1, skillName: 'skillName', fileInfo: {})],
-        levelName: 'level1',
-        priority: 2,
-        tests: [])
-  ];
+  // List<Level> levels = [
+  //   Level(
+  //       id: 1,
+  //       skills: [Skill(id: 1, skillName: 'skillName', fileInfo: {})],
+  //       levelName: 'level1',
+  //       priority: 2,
+  //       tests: [])
+  // ];
+  List<Level> levels = [];
   List<Skill> skills = [];
+  List<String> files = [];
   List<int> priority = [-1, 1, 2, 3, 4, 5];
-  List<String> files = ['readme.md', 'lesson1.md', 'lesson2.md'];
+  List<Test> test = [];
+  // List<String> files = ['readme.md', 'lesson1.md', 'lesson2.md'];
 
   @override
   Widget build(BuildContext context) {
     double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
+
+    // for (var i = 0; i < levels.length; i++) {
+    //   levelsLength += ((pageList[levelVisibility[i]].levels?.length ?? 1) != 0)
+    //       ? (pageList[levelVisibility[i]].levels?.length ?? 1) + 1
+    //       : 1;
+    // }
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Theme.of(context).colorScheme.background,
@@ -108,17 +120,108 @@ class _CreateCompState extends State<CreateComp> {
                                 if (compName != '' &&
                                     levels.isNotEmpty &&
                                     skills.isNotEmpty &&
-                                    files.isNotEmpty) {
+                                    files.isNotEmpty &&
+                                    test.isNotEmpty) {
                                   alertDialog(context, 'Сохранить и выйти?',
                                       () {
+                                    if (levels.length == test.length) {
+                                      bool empty = false;
+                                      for (var i = 0;
+                                          i < levels.length && !false;
+                                          i++) {
+                                        if (levels[i].levelName == '') {
+                                          empty = true;
+                                        }
+                                        if (levels[i].priority == -1) {
+                                          empty = true;
+                                        }
+                                        for (var j = 0;
+                                            j <
+                                                    (levels[i].skills?.length ??
+                                                        0) &&
+                                                !empty;
+                                            j++) {
+                                          if (levels[i].skills?[j].skillName ==
+                                              '') {
+                                            empty = true;
+                                          }
+                                          if (levels[i]
+                                                  .skills?[j]
+                                                  .fileInfo
+                                                  ?.contains('') ??
+                                              false) {
+                                            empty = true;
+                                          }
+                                        }
+                                        for (var j = 0;
+                                            j < levels[i].tests.length &&
+                                                !empty;
+                                            j++) {
+                                          if (levels[i]
+                                                  .tests[j]
+                                                  .testQs
+                                                  ?.contains('') ??
+                                              false) {
+                                            empty = true;
+                                          }
+                                          if (levels[i]
+                                                  .tests[j]
+                                                  .testAns
+                                                  ?.containsValue('') ??
+                                              false) {
+                                            empty = true;
+                                          }
+                                          if (levels[i]
+                                                  .tests[j]
+                                                  .testCorr
+                                                  ?.contains(-1) ??
+                                              false) {
+                                            empty = true;
+                                          }
+                                          if (levels[i].tests[j].testTime ==
+                                              -1) {
+                                            empty = true;
+                                          }
+                                          if (levels[i]
+                                                  .tests[j]
+                                                  .testQs
+                                                  ?.length !=
+                                              levels[i]
+                                                  .tests[j]
+                                                  .testCorr
+                                                  ?.length) {
+                                            empty = true;
+                                          }
+                                        }
+                                      }
+                                      if (!empty) {
+                                        setState(() {
+                                          adminController.compList.add(
+                                              Competency(
+                                                  id: adminController
+                                                          .compList.isNotEmpty
+                                                      ? adminController.compList
+                                                              .last.id +
+                                                          1
+                                                      : 1,
+                                                  levels: levels,
+                                                  name: compName));
+                                        });
+                                      } else {
+                                        Get.snackbar('Ошибка',
+                                            'Необходимо заполнить все поля');
+                                      }
+                                    } else {
+                                      Get.snackbar('Ошибка',
+                                          'Для каждого уровня должен быть составлен тест');
+                                    }
                                     Navigator.pop(context);
                                     Navigator.pop(context);
-                                    //add to the admincontroller
                                   }, false);
                                 } else {
                                   alertDialog(
                                       context,
-                                      'Нужно добавить хотя бы один уровень и заполнить поля',
+                                      'Необходимо заполнить все поля и добавить тесты к каждому уровню',
                                       () {},
                                       true);
                                 }
@@ -159,7 +262,7 @@ class _CreateCompState extends State<CreateComp> {
                 child: Visibility(
                   // visible: levels.isNotEmpty,
                   child: SizedBox(
-                    height: levels.length * 700,
+                    height: levels.length * 295 + skills.length * 260,
                     child: ListView.builder(
                       itemCount: levels.length,
                       itemBuilder: (context, index) {
@@ -213,6 +316,9 @@ class _CreateCompState extends State<CreateComp> {
                                             alertDialog(
                                                 context, 'Удалить уровень?',
                                                 () {
+                                              setState(() {
+                                                levels.removeAt(index);
+                                              });
                                               Navigator.pop(context);
                                             }, false);
                                           },
@@ -336,11 +442,11 @@ class _CreateCompState extends State<CreateComp> {
                                   child: SizedBox(
                                     height:
                                         (levels[index].skills?.length ?? 1) *
-                                            410,
+                                            460,
                                     child: ListView.builder(
                                         itemCount:
                                             (levels[index].skills?.length ?? 1),
-                                        itemBuilder: (context, index) {
+                                        itemBuilder: (context, j) {
                                           return Padding(
                                             padding: EdgeInsets.only(
                                                 top: 10.0,
@@ -410,6 +516,15 @@ class _CreateCompState extends State<CreateComp> {
                                                                   context,
                                                                   'Удалить навык?',
                                                                   () {
+                                                                setState(() {
+                                                                  skills.remove(
+                                                                      levels[index]
+                                                                          .skills?[j]);
+                                                                  levels[index]
+                                                                      .skills
+                                                                      ?.removeAt(
+                                                                          j);
+                                                                });
                                                                 Navigator.pop(
                                                                     context);
                                                               }, false);
@@ -426,8 +541,8 @@ class _CreateCompState extends State<CreateComp> {
                                                       width: w * 0.9,
                                                       text: 'Название',
                                                       onChanged: (p0) =>
-                                                          levels[index]
-                                                              .levelName = p0,
+                                                          skills[j].skillName =
+                                                              p0,
                                                       enabled: true,
                                                       validator: (value) {
                                                         if (value == null) {
@@ -442,7 +557,12 @@ class _CreateCompState extends State<CreateComp> {
                                                             .symmetric(
                                                         vertical: 10.0),
                                                     child: Container(
-                                                      height: files.length * 65,
+                                                      height: (levels[index]
+                                                                  .skills?[j]
+                                                                  .fileInfo
+                                                                  ?.length ??
+                                                              0) *
+                                                          65,
                                                       width: w * 0.9,
                                                       decoration: BoxDecoration(
                                                         color: Theme.of(context)
@@ -462,11 +582,16 @@ class _CreateCompState extends State<CreateComp> {
                                                                   top: 10.0),
                                                           child:
                                                               ListView.builder(
-                                                                  itemCount: files
-                                                                      .length,
+                                                                  itemCount: levels[
+                                                                              index]
+                                                                          .skills?[
+                                                                              j]
+                                                                          .fileInfo
+                                                                          ?.length ??
+                                                                      0,
                                                                   itemBuilder:
                                                                       (context,
-                                                                          index) {
+                                                                          l) {
                                                                     return Column(
                                                                       children: [
                                                                         Padding(
@@ -483,7 +608,7 @@ class _CreateCompState extends State<CreateComp> {
                                                                                   Padding(
                                                                                     padding: const EdgeInsets.only(left: 30.0, right: 30.0),
                                                                                     child: Text(
-                                                                                      files[index],
+                                                                                      levels[index].skills?[j].fileInfo?[l] ?? '',
                                                                                       style: Theme.of(context).textTheme.titleLarge?.copyWith(fontSize: 30),
                                                                                     ),
                                                                                   ),
@@ -501,7 +626,8 @@ class _CreateCompState extends State<CreateComp> {
                                                                                       var name = await editDialog(context, 'Введите название файла:');
                                                                                       if (name != null) {
                                                                                         setState(() {
-                                                                                          files[index] = name != '' ? name : files[index];
+                                                                                          files[l] = name != '' ? name : files[l];
+                                                                                          levels[index].skills?[j].fileInfo?[l] = name != '' ? name : levels[index].skills?[j].fileInfo?[l] ?? '';
                                                                                         });
                                                                                       }
                                                                                     },
@@ -519,6 +645,10 @@ class _CreateCompState extends State<CreateComp> {
                                                                                       ),
                                                                                       onTap: () {
                                                                                         alertDialog(context, 'Удалить файл?', () {
+                                                                                          setState(() {
+                                                                                            files.remove(levels[index].skills?[j].fileInfo?[l]);
+                                                                                            levels[index].skills?[j].fileInfo?.removeAt(l);
+                                                                                          });
                                                                                           Navigator.pop(context);
                                                                                         }, false);
                                                                                       },
@@ -531,7 +661,7 @@ class _CreateCompState extends State<CreateComp> {
                                                                         ),
                                                                         Visibility(
                                                                           visible:
-                                                                              index < files.length - 1,
+                                                                              l < (levels[index].skills?[j].fileInfo?.length ?? 0) - 1,
                                                                           child:
                                                                               const Divider(
                                                                             thickness:
@@ -559,8 +689,16 @@ class _CreateCompState extends State<CreateComp> {
                                                       width: w * 0.9,
                                                       pad: false,
                                                       onPressed: () async {
+                                                        // fileDialog(context);
                                                         setState(() {
-                                                          //add file
+                                                          files.add(
+                                                              'markdown.xx');
+                                                          levels[index]
+                                                              .skills?[j]
+                                                              .fileInfo
+                                                              ?.add(
+                                                                  'markdown.xx');
+                                                          //update
                                                         });
                                                       },
                                                     ),
@@ -585,7 +723,7 @@ class _CreateCompState extends State<CreateComp> {
                                                   1
                                               : 1,
                                           skillName: '',
-                                          fileInfo: {});
+                                          fileInfo: []);
                                       levels[index].skills?.add(skill);
                                       skills.add(skill);
                                     });
@@ -637,7 +775,7 @@ class _CreateCompState extends State<CreateComp> {
                 onPressed: () async {
                   setState(() {
                     levels.add(Level(
-                        id: levels.last.id + 1,
+                        id: levels.isNotEmpty ? levels.last.id + 1 : 1,
                         skills: [],
                         levelName: '',
                         priority: -1,
@@ -714,10 +852,10 @@ class _CreateCompState extends State<CreateComp> {
   }
 
   Future<String?> editDialog(context, message) async {
+    String? newName;
     var newCompName = await showDialog(
         context: context,
         builder: (BuildContext context) {
-          String? newName;
           return AlertDialog(
             backgroundColor: Theme.of(context).colorScheme.onTertiaryContainer,
             title: Padding(
@@ -763,6 +901,77 @@ class _CreateCompState extends State<CreateComp> {
           );
         });
     return newCompName;
+  }
+
+  Future<String?> fileDialog(context) async {
+    var newFileName = await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          String? newFile;
+          return AlertDialog(
+            backgroundColor: Theme.of(context).colorScheme.onTertiaryContainer,
+            title: Padding(
+                padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.width * 0.01,
+                ),
+                child: SizedBox(
+                  height: 150,
+                  width: 800,
+                  child: Stack(
+                    children: [
+                      Center(
+                        child: Container(
+                          height: 100,
+                          width: 600,
+                          decoration: BoxDecoration(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSecondaryContainer),
+                        ),
+                      ),
+                      Center(
+                        child: InkWell(
+                          child: Text(
+                            'Выберите файлы',
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyLarge
+                                ?.copyWith(
+                                    fontSize: 25,
+                                    decoration: TextDecoration.underline),
+                          ),
+                          onTap: () async {
+                            FilePickerResult? result =
+                                await FilePicker.platform.pickFiles();
+                            if (result != null) {
+                              Get.snackbar('Path', result.files.single.path!);
+                            } else {
+                              Get.snackbar('Отмена', 'Файл не выбран');
+                            }
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                )),
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(25)),
+            ),
+            content: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  getButton('Отмена', () {
+                    Navigator.pop(context);
+                  }),
+                  getButton('Ок', () {
+                    Navigator.pop(context, newFile);
+                  }),
+                ]),
+            actionsAlignment: MainAxisAlignment.spaceAround,
+          );
+        });
+    return newFileName;
   }
 
   Widget getButton(String text, Function() onPressed) => Container(

@@ -315,9 +315,9 @@ class _UsersState extends State<Users> {
                                               }
                                             },
                                           ),
-                                          // const SizedBox(
-                                          //   width: 30.0,
-                                          // ),
+                                          const SizedBox(
+                                            width: 30.0,
+                                          ),
                                           // InkWell(
                                           //   child: Image.asset(
                                           //     'assets/images/report.png',
@@ -549,10 +549,10 @@ class _UsersState extends State<Users> {
   }
 
   Future<String?> editDialog(context, message) async {
+    String? newName;
     var newUserName = await showDialog(
         context: context,
         builder: (BuildContext context) {
-          String? newName;
           return AlertDialog(
             backgroundColor: Theme.of(context).colorScheme.onTertiaryContainer,
             title: Padding(

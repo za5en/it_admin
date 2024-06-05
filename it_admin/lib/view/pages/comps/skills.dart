@@ -1,3 +1,4 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:it_admin/data/test.dart';
@@ -23,8 +24,10 @@ class Skills extends StatefulWidget {
 class _SkillsState extends State<Skills> {
   var adminController = Get.find<AdminController>();
   var levelName = '';
+  List<int> fileVisibility = [];
   @override
   Widget build(BuildContext context) {
+    int filesLength = 0;
     List<Skill> skills = [];
     var competency = adminController.compList
         .firstWhere((element) => element.id == widget.compId);
@@ -39,6 +42,12 @@ class _SkillsState extends State<Skills> {
               Test(id: 1, testQs: [], testAns: {}, testCorr: [], testTime: 5)
             ]);
     skills = level.skills ?? [];
+
+    for (var i = 0; i < fileVisibility.length; i++) {
+      filesLength += ((skills[fileVisibility[i]].fileInfo?.length ?? 1) != 0)
+          ? (skills[fileVisibility[i]].fileInfo?.length ?? 1) + 1
+          : 1;
+    }
 
     double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
@@ -85,11 +94,11 @@ class _SkillsState extends State<Skills> {
                                 height: 35.0,
                               ),
                               onTap: () {
-                                alertDialog(context, 'Выйти без сохранения?',
-                                    () {
-                                  Navigator.pop(context);
-                                  Navigator.pop(context);
-                                });
+                                // alertDialog(context, 'Выйти без сохранения?',
+                                //     () {
+                                //   Navigator.pop(context);
+                                Navigator.pop(context);
+                                // });
                               },
                             )),
                       ),
@@ -117,30 +126,30 @@ class _SkillsState extends State<Skills> {
                                 var name = await editDialog(
                                     context, 'Введите название уровня:');
                                 if (name != null) {
-                                  setState(() {
-                                    levelName = name;
-                                    bool found = false;
-                                    for (var i = 0;
-                                        i < adminController.compList.length &&
-                                            !found;
-                                        i++) {
-                                      for (var j = 0;
-                                          j <
-                                                  (adminController.compList[i]
-                                                          .levels?.length ??
-                                                      0) &&
-                                              !found;
-                                          j++) {
-                                        if (adminController
-                                                .compList[i].levels?[j].id ==
-                                            widget.level.id) {
+                                  // levelName = name;
+                                  bool find = false;
+                                  for (var i = 0;
+                                      i < adminController.compList.length &&
+                                          !find;
+                                      i++) {
+                                    for (var j = 0;
+                                        j <
+                                                (adminController.compList[i]
+                                                        .levels?.length ??
+                                                    0) &&
+                                            !find;
+                                        j++) {
+                                      if (adminController
+                                              .compList[i].levels?[j].id ==
+                                          widget.level.id) {
+                                        setState(() {
+                                          find = true;
                                           adminController.compList[i].levels?[j]
                                               .levelName = name;
-                                          found = true;
-                                        }
+                                        });
                                       }
                                     }
-                                  });
+                                  }
                                 }
                               },
                             ),
@@ -149,21 +158,26 @@ class _SkillsState extends State<Skills> {
                       ),
                       Padding(
                         padding: EdgeInsets.only(right: w * 0.01, top: 15),
-                        child: Align(
-                            alignment: Alignment.centerRight,
-                            child: InkWell(
-                              child: Image.asset(
-                                'assets/images/save.png',
-                                height: 35.0,
-                              ),
-                              onTap: () {
-                                alertDialog(context, 'Сохранить и выйти?', () {
-                                  Navigator.pop(context);
-                                  Navigator.pop(context);
-                                  //add to the admincontroller
-                                });
-                              },
-                            )),
+                        child: const Align(
+                          alignment: Alignment.centerRight,
+                          // child: InkWell(
+                          //   child: Image.asset(
+                          //     'assets/images/save.png',
+                          //     height: 35.0,
+                          //   ),
+                          //   onTap: () {
+                          //     alertDialog(context, 'Сохранить и выйти?', () {
+                          //       Navigator.pop(context);
+                          //       Navigator.pop(context);
+                          //       //add to the admincontroller
+                          //     });
+                          //   },
+                          // ),
+                          child: SizedBox(
+                            height: 35.0,
+                            width: 35.0,
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -172,7 +186,7 @@ class _SkillsState extends State<Skills> {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 35.0),
                 child: Container(
-                  height: skills.length * 65,
+                  height: skills.length * 65 + filesLength * 60.5,
                   width: w * 0.98,
                   decoration: BoxDecoration(
                     color: Theme.of(context).colorScheme.secondary,
@@ -210,7 +224,12 @@ class _SkillsState extends State<Skills> {
                                             ),
                                             onTap: () {
                                               setState(() {
-                                                //unhide files (bool)
+                                                if (fileVisibility
+                                                    .contains(index)) {
+                                                  fileVisibility.remove(index);
+                                                } else {
+                                                  fileVisibility.add(index);
+                                                }
                                               });
                                             },
                                           ),
@@ -231,17 +250,18 @@ class _SkillsState extends State<Skills> {
                                                   context,
                                                   'Введите название навыка:');
                                               if (name != null) {
-                                                setState(() {
-                                                  skills[index].skillName =
-                                                      name;
-                                                  bool found = false;
-                                                  for (var i = 0;
-                                                      i <
-                                                              adminController
-                                                                  .compList
-                                                                  .length &&
-                                                          !found;
-                                                      i++) {
+                                                skills[index].skillName = name;
+                                                bool find = false;
+                                                for (var i = 0;
+                                                    i <
+                                                            adminController
+                                                                .compList
+                                                                .length &&
+                                                        !find;
+                                                    i++) {
+                                                  if (adminController
+                                                          .compList[i].id ==
+                                                      widget.compId) {
                                                     for (var j = 0;
                                                         j <
                                                                 (adminController
@@ -250,30 +270,44 @@ class _SkillsState extends State<Skills> {
                                                                         .levels
                                                                         ?.length ??
                                                                     0) &&
-                                                            !found;
+                                                            !find;
                                                         j++) {
-                                                      for (var k = 0;
-                                                          k <
-                                                                  (adminController
-                                                                          .compList[
-                                                                              i]
-                                                                          .levels?[
-                                                                              j]
-                                                                          .skills
-                                                                          ?.length ??
-                                                                      1) &&
-                                                              !found;
-                                                          k++) {
-                                                        found = true;
-                                                        adminController
-                                                            .compList[i]
-                                                            .levels?[j]
-                                                            .skills?[k]
-                                                            .skillName = name;
+                                                      if (adminController
+                                                              .compList[i]
+                                                              .levels?[j]
+                                                              .id ==
+                                                          widget.level.id) {
+                                                        for (var k = 0;
+                                                            k <
+                                                                    (adminController
+                                                                            .compList[i]
+                                                                            .levels?[j]
+                                                                            .skills
+                                                                            ?.length ??
+                                                                        1) &&
+                                                                !find;
+                                                            k++) {
+                                                          if (adminController
+                                                                  .compList[i]
+                                                                  .levels?[j]
+                                                                  .skills?[k]
+                                                                  .id ==
+                                                              skills[index]
+                                                                  .id) {
+                                                            setState(() {
+                                                              find = true;
+                                                              adminController
+                                                                  .compList[i]
+                                                                  .levels?[j]
+                                                                  .skills?[k]
+                                                                  .skillName = name;
+                                                            });
+                                                          }
+                                                        }
                                                       }
                                                     }
                                                   }
-                                                });
+                                                }
                                               }
                                             },
                                           ),
@@ -295,6 +329,45 @@ class _SkillsState extends State<Skills> {
                                                 alertDialog(
                                                     context, 'Удалить навык?',
                                                     () {
+                                                  bool find = false;
+                                                  for (var i = 0;
+                                                      i <
+                                                              adminController
+                                                                  .compList
+                                                                  .length &&
+                                                          !find;
+                                                      i++) {
+                                                    if (adminController
+                                                            .compList[i].id ==
+                                                        widget.compId) {
+                                                      for (var j = 0;
+                                                          j <
+                                                                  (adminController
+                                                                          .compList[
+                                                                              i]
+                                                                          .levels
+                                                                          ?.length ??
+                                                                      0) &&
+                                                              !find;
+                                                          j++) {
+                                                        if (adminController
+                                                                .compList[i]
+                                                                .levels?[j]
+                                                                .id ==
+                                                            widget.level.id) {
+                                                          setState(() {
+                                                            find = true;
+                                                            adminController
+                                                                .compList[i]
+                                                                .levels?[j]
+                                                                .skills
+                                                                ?.remove(skills[
+                                                                    index]);
+                                                          });
+                                                        }
+                                                      }
+                                                    }
+                                                  }
                                                   Navigator.pop(context);
                                                 });
                                               },
@@ -306,10 +379,300 @@ class _SkillsState extends State<Skills> {
                                   ),
                                 ),
                                 Visibility(
+                                  visible: fileVisibility.contains(index),
+                                  child: const Padding(
+                                    padding: EdgeInsets.only(top: 10.0),
+                                    child: Divider(
+                                      thickness: 0.0,
+                                      height: 1,
+                                    ),
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: fileVisibility.contains(index) &&
+                                      (skills[index].fileInfo?.isNotEmpty ??
+                                          false),
+                                  child: SizedBox(
+                                    height:
+                                        (skills[index].fileInfo?.length ?? 0) *
+                                            61,
+                                    child: ListView.builder(
+                                      itemCount:
+                                          (skills[index].fileInfo?.length ?? 0),
+                                      itemBuilder: (context, j) {
+                                        return Column(
+                                          children: [
+                                            Stack(
+                                              children: [
+                                                Container(
+                                                  height: 60,
+                                                  width: 50,
+                                                  decoration: BoxDecoration(
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .background,
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 50.0),
+                                                  child: Container(
+                                                    height: 60,
+                                                    decoration: BoxDecoration(
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .surface,
+                                                    ),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Row(
+                                                          children: [
+                                                            InkWell(
+                                                              child: Padding(
+                                                                padding: const EdgeInsets
+                                                                        .only(
+                                                                    left: 40.0,
+                                                                    right:
+                                                                        40.0),
+                                                                child: Text(
+                                                                  skills[index]
+                                                                              .fileInfo?[
+                                                                          j] ??
+                                                                      'filename.md',
+                                                                  style: Theme.of(
+                                                                          context)
+                                                                      .textTheme
+                                                                      .titleLarge
+                                                                      ?.copyWith(
+                                                                          fontSize:
+                                                                              30),
+                                                                ),
+                                                              ),
+                                                              onTap: () {},
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        Row(
+                                                          children: [
+                                                            InkWell(
+                                                              child:
+                                                                  Image.asset(
+                                                                'assets/images/edit.png',
+                                                                color: Theme.of(
+                                                                        context)
+                                                                    .colorScheme
+                                                                    .primary,
+                                                                height: 45,
+                                                              ),
+                                                              onTap: () async {
+                                                                var name =
+                                                                    await editDialog(
+                                                                        context,
+                                                                        'Изменить название файла:');
+                                                                if (name !=
+                                                                    null) {
+                                                                  // setState(() {
+                                                                  //   skills[index]
+                                                                  //           .fileInfo?[
+                                                                  //       j] = name;
+                                                                  // });
+                                                                  bool find =
+                                                                      false;
+                                                                  for (var i =
+                                                                          0;
+                                                                      i < adminController.compList.length &&
+                                                                          !find;
+                                                                      i++) {
+                                                                    if (adminController
+                                                                            .compList[
+                                                                                i]
+                                                                            .id ==
+                                                                        widget
+                                                                            .compId) {
+                                                                      for (var k =
+                                                                              0;
+                                                                          k < (adminController.compList[i].levels?.length ?? 0) &&
+                                                                              !find;
+                                                                          k++) {
+                                                                        if (adminController.compList[i].levels?[k].id ==
+                                                                            widget.level.id) {
+                                                                          for (var l = 0;
+                                                                              l < (adminController.compList[i].levels?[k].skills?.length ?? 1) && !find;
+                                                                              l++) {
+                                                                            if (adminController.compList[i].levels?[k].skills?[l].id ==
+                                                                                skills[index].id) {
+                                                                              setState(() {
+                                                                                find = true;
+                                                                                skills[index].fileInfo?[j] = name;
+                                                                              });
+                                                                            }
+                                                                          }
+                                                                        }
+                                                                      }
+                                                                    }
+                                                                  }
+                                                                }
+                                                              },
+                                                            ),
+                                                            const SizedBox(
+                                                              width: 30.0,
+                                                            ),
+                                                            Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .only(
+                                                                      right:
+                                                                          15.0),
+                                                              child: InkWell(
+                                                                child:
+                                                                    Image.asset(
+                                                                  'assets/images/bin.png',
+                                                                  color: Theme.of(
+                                                                          context)
+                                                                      .colorScheme
+                                                                      .primary,
+                                                                  height: 35,
+                                                                ),
+                                                                onTap: () {
+                                                                  alertDialog(
+                                                                      context,
+                                                                      'Удалить файл?',
+                                                                      () {
+                                                                    bool find =
+                                                                        false;
+                                                                    for (var i =
+                                                                            0;
+                                                                        i < adminController.compList.length &&
+                                                                            !find;
+                                                                        i++) {
+                                                                      if (adminController
+                                                                              .compList[i]
+                                                                              .id ==
+                                                                          widget.compId) {
+                                                                        for (var k =
+                                                                                0;
+                                                                            k < (adminController.compList[i].levels?.length ?? 0) &&
+                                                                                !find;
+                                                                            k++) {
+                                                                          if (adminController.compList[i].levels?[k].id ==
+                                                                              widget.level.id) {
+                                                                            for (var l = 0;
+                                                                                l < (adminController.compList[i].levels?[k].skills?.length ?? 1) && !find;
+                                                                                l++) {
+                                                                              if (adminController.compList[i].levels?[k].skills?[l].id == skills[index].id) {
+                                                                                setState(() {
+                                                                                  find = true;
+                                                                                  adminController.compList[i].levels?[k].skills?[l].fileInfo?.remove(skills[index].fileInfo?[j]);
+                                                                                });
+                                                                              }
+                                                                            }
+                                                                          }
+                                                                        }
+                                                                      }
+                                                                    }
+                                                                    Navigator.pop(
+                                                                        context);
+                                                                  });
+                                                                },
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            Stack(
+                                              children: [
+                                                Container(
+                                                  height: 1,
+                                                  width: 50,
+                                                  decoration: BoxDecoration(
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .background,
+                                                  ),
+                                                ),
+                                                const Padding(
+                                                  padding: EdgeInsets.only(
+                                                      left: 50.0),
+                                                  child: Divider(
+                                                    thickness: 0.0,
+                                                    height: 1,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: fileVisibility.contains(index),
+                                  child: Stack(
+                                    children: [
+                                      Container(
+                                        height: 60,
+                                        width: 50,
+                                        decoration: BoxDecoration(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .background,
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 50.0),
+                                        child: InkWell(
+                                          child: Container(
+                                            height: 60,
+                                            decoration: BoxDecoration(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .onSecondaryContainer,
+                                            ),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  'Загрузить материалы',
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyLarge
+                                                      ?.copyWith(fontSize: 30),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          onTap: () {
+                                            fileDialog(context);
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Visibility(
                                   visible: index < skills.length - 1,
-                                  child: const Divider(
-                                    thickness: 0.0,
-                                    height: 19,
+                                  child: Padding(
+                                    padding: EdgeInsets.only(
+                                        top: fileVisibility.contains(index)
+                                            ? 0.0
+                                            : 10.0,
+                                        bottom: 10.0),
+                                    child: const Divider(
+                                      thickness: 0.0,
+                                      height: 1,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -328,19 +691,25 @@ class _SkillsState extends State<Skills> {
                   var name =
                       await editDialog(context, 'Введите название навыка:');
                   if (name != null) {
-                    //add skill
+                    setState(() {
+                      skills.add(Skill(
+                          id: skills.isNotEmpty ? skills.last.id + 1 : 1,
+                          skillName: name,
+                          fileInfo: []));
+                    });
                   }
                 },
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 20.0),
                 child: AElevatedButtonExtended(
-                  text: 'Изменить тест',
+                  text: widget.level.tests.isNotEmpty
+                      ? 'Изменить тест'
+                      : 'Добавить тест',
                   textSize: 30,
                   width: w * 0.98,
                   pad: false,
                   onPressed: () async {
-                    // Navigator.pop(context);
                     if (widget.level.tests.isNotEmpty) {
                       Get.to(() => TestPage(
                           test: widget.level.tests[0],
@@ -410,10 +779,10 @@ class _SkillsState extends State<Skills> {
   }
 
   Future<String?> editDialog(context, message) async {
+    String? newName;
     var newCompName = await showDialog(
         context: context,
         builder: (BuildContext context) {
-          String? newName;
           return AlertDialog(
             backgroundColor: Theme.of(context).colorScheme.onTertiaryContainer,
             title: Padding(
@@ -459,6 +828,77 @@ class _SkillsState extends State<Skills> {
           );
         });
     return newCompName;
+  }
+
+  Future<String?> fileDialog(context) async {
+    String? newFile;
+    var newFileName = await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            backgroundColor: Theme.of(context).colorScheme.onTertiaryContainer,
+            title: Padding(
+                padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.width * 0.01,
+                ),
+                child: SizedBox(
+                  height: 150,
+                  width: 800,
+                  child: Stack(
+                    children: [
+                      Center(
+                        child: Container(
+                          height: 100,
+                          width: 600,
+                          decoration: BoxDecoration(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSecondaryContainer),
+                        ),
+                      ),
+                      Center(
+                        child: InkWell(
+                          child: Text(
+                            'Выберите файлы',
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyLarge
+                                ?.copyWith(
+                                    fontSize: 25,
+                                    decoration: TextDecoration.underline),
+                          ),
+                          onTap: () async {
+                            FilePickerResult? result =
+                                await FilePicker.platform.pickFiles();
+                            if (result != null) {
+                              Get.snackbar('Path', result.files.single.path!);
+                            } else {
+                              Get.snackbar('Отмена', 'Файл не выбран');
+                            }
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                )),
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(25)),
+            ),
+            content: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  getButton('Отмена', () {
+                    Navigator.pop(context);
+                  }),
+                  getButton('Ок', () {
+                    Navigator.pop(context, newFile);
+                  }),
+                ]),
+            actionsAlignment: MainAxisAlignment.spaceAround,
+          );
+        });
+    return newFileName;
   }
 
   Widget getButton(String text, Function() onPressed) => Container(

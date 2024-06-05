@@ -25,6 +25,7 @@ class _TestPageState extends State<TestPage> {
     var answerList = widget.test.testAns ?? {};
     var correctList = widget.test.testCorr ?? [];
     var testTime = widget.test.testTime ?? 10;
+    var answerKeys = answerList.keys.toList();
 
     double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
@@ -152,7 +153,7 @@ class _TestPageState extends State<TestPage> {
                 child: Visibility(
                   visible: questionList.isNotEmpty,
                   child: SizedBox(
-                    height: questionList.length * 150,
+                    height: questionList.length * 220,
                     child: ListView.builder(
                       itemCount: questionList.length,
                       itemBuilder: (context, index) {
@@ -203,6 +204,13 @@ class _TestPageState extends State<TestPage> {
                                           onTap: () {
                                             alertDialog(
                                                 context, 'Удалить вопрос?', () {
+                                              setState(() {
+                                                questionList.removeAt(index);
+                                                answerList
+                                                    .remove(answerKeys[index]);
+                                                answerKeys.remove(index);
+                                                correctList.removeAt(index);
+                                              });
                                               Navigator.pop(context);
                                             }, false);
                                           },
@@ -238,8 +246,8 @@ class _TestPageState extends State<TestPage> {
                                             child: TextFormField(
                                               onChanged: (val) {
                                                 setState(() {
-                                                  answerList[index + 1][0] =
-                                                      val;
+                                                  answerList[answerKeys[index]]
+                                                      [0] = val;
                                                 });
                                               },
                                               style: Theme.of(context)
@@ -248,8 +256,8 @@ class _TestPageState extends State<TestPage> {
                                                   ?.copyWith(fontSize: 20),
                                               cursorColor: Colors.grey,
                                               decoration: InputDecoration(
-                                                hintText: answerList[index + 1]
-                                                    [0],
+                                                hintText: answerList[
+                                                    answerKeys[index]][0],
                                                 hintStyle: Theme.of(context)
                                                     .textTheme
                                                     .titleLarge
@@ -298,8 +306,8 @@ class _TestPageState extends State<TestPage> {
                                             child: TextFormField(
                                               onChanged: (val) {
                                                 setState(() {
-                                                  answerList[index + 1][1] =
-                                                      val;
+                                                  answerList[answerKeys[index]]
+                                                      [1] = val;
                                                 });
                                               },
                                               style: Theme.of(context)
@@ -308,8 +316,8 @@ class _TestPageState extends State<TestPage> {
                                                   ?.copyWith(fontSize: 20),
                                               cursorColor: Colors.grey,
                                               decoration: InputDecoration(
-                                                hintText: answerList[index + 1]
-                                                    [1],
+                                                hintText: answerList[
+                                                    answerKeys[index]][1],
                                                 hintStyle: Theme.of(context)
                                                     .textTheme
                                                     .titleLarge
@@ -369,8 +377,8 @@ class _TestPageState extends State<TestPage> {
                                             child: TextFormField(
                                               onChanged: (val) {
                                                 setState(() {
-                                                  answerList[index + 1][2] =
-                                                      val;
+                                                  answerList[answerKeys[index]]
+                                                      [2] = val;
                                                 });
                                               },
                                               style: Theme.of(context)
@@ -379,8 +387,8 @@ class _TestPageState extends State<TestPage> {
                                                   ?.copyWith(fontSize: 20),
                                               cursorColor: Colors.grey,
                                               decoration: InputDecoration(
-                                                hintText: answerList[index + 1]
-                                                    [2],
+                                                hintText: answerList[
+                                                    answerKeys[index]][2],
                                                 hintStyle: Theme.of(context)
                                                     .textTheme
                                                     .titleLarge
@@ -429,8 +437,8 @@ class _TestPageState extends State<TestPage> {
                                             child: TextFormField(
                                               onChanged: (val) {
                                                 setState(() {
-                                                  answerList[index + 1][3] =
-                                                      val;
+                                                  answerList[answerKeys[index]]
+                                                      [3] = val;
                                                 });
                                               },
                                               style: Theme.of(context)
@@ -439,8 +447,8 @@ class _TestPageState extends State<TestPage> {
                                                   ?.copyWith(fontSize: 20),
                                               cursorColor: Colors.grey,
                                               decoration: InputDecoration(
-                                                hintText: answerList[index + 1]
-                                                    [3],
+                                                hintText: answerList[
+                                                    answerKeys[index]][3],
                                                 hintStyle: Theme.of(context)
                                                     .textTheme
                                                     .titleLarge
@@ -488,7 +496,19 @@ class _TestPageState extends State<TestPage> {
                 width: w * 0.98,
                 pad: false,
                 onPressed: () async {
-                  //add question card
+                  setState(() {
+                    questionList.add('Вопрос');
+                    answerList.addAll({
+                      questionList.length: [
+                        'Ответ 1',
+                        'Ответ 2',
+                        'Ответ 3',
+                        'Ответ 4'
+                      ]
+                    });
+                    answerKeys.add(questionList.length);
+                    correctList.add(1);
+                  });
                 },
               ),
               Padding(
@@ -560,10 +580,10 @@ class _TestPageState extends State<TestPage> {
   }
 
   Future<String?> editDialog(context, message) async {
+    String? newName;
     var newCompName = await showDialog(
         context: context,
         builder: (BuildContext context) {
-          String? newName;
           return AlertDialog(
             backgroundColor: Theme.of(context).colorScheme.onTertiaryContainer,
             title: Padding(

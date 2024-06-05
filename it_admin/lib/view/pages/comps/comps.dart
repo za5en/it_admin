@@ -31,8 +31,10 @@ class _CompsState extends State<Comps> {
   bool filter = false;
   List<int> priority = [-1, 1, 2, 3, 4, 5];
   List<int> levelVisibility = [];
+
   @override
   Widget build(BuildContext context) {
+    int levelsLength = 0;
     int pages = adminController.compList.length ~/ 10 + 1;
     if (!filter) {
       pageList = adminController.compList.length < 10 * page
@@ -42,6 +44,12 @@ class _CompsState extends State<Comps> {
           : adminController.compList
               .getRange(10 * (page - 1), 10 * page)
               .toList();
+    }
+
+    for (var i = 0; i < levelVisibility.length; i++) {
+      levelsLength += ((pageList[levelVisibility[i]].levels?.length ?? 1) != 0)
+          ? (pageList[levelVisibility[i]].levels?.length ?? 1) + 1
+          : 1;
     }
 
     var compList = ['Название компетенции'];
@@ -203,8 +211,8 @@ class _CompsState extends State<Comps> {
                 padding: const EdgeInsets.symmetric(vertical: 35.0),
                 child: Container(
                   height: pageList.length < 10
-                      ? pageList.length * 66 + levelVisibility.length * 121
-                      : levelVisibility.length * 121 + 660,
+                      ? pageList.length * 66 + levelsLength * 60.5
+                      : levelsLength * 60.5 + 660,
                   width: w * 0.98,
                   decoration: BoxDecoration(
                     color: Theme.of(context).colorScheme.secondary,
@@ -270,21 +278,25 @@ class _CompsState extends State<Comps> {
                                                   false);
                                               if (name != null) {
                                                 var id = pageList[index].id;
-                                                setState(() {
-                                                  pageList[index].name = name !=
-                                                          ''
-                                                      ? name
-                                                      : pageList[index].name;
-                                                });
+                                                // setState(() {
+                                                //   pageList[index].name = name !=
+                                                //           ''
+                                                //       ? name
+                                                //       : pageList[index].name;
+                                                // });
+                                                bool find = false;
                                                 for (var i = 0;
                                                     i <
-                                                        adminController
-                                                            .compList.length;
+                                                            adminController
+                                                                .compList
+                                                                .length &&
+                                                        !find;
                                                     i++) {
                                                   if (adminController
                                                           .compList[i].id ==
                                                       id) {
                                                     setState(() {
+                                                      find = true;
                                                       adminController
                                                               .compList[i]
                                                               .name =
@@ -302,25 +314,30 @@ class _CompsState extends State<Comps> {
                                           const SizedBox(
                                             width: 30.0,
                                           ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                right: 5.0),
-                                            child: InkWell(
-                                              child: Image.asset(
-                                                'assets/images/bin.png',
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .primary,
-                                                height: 35,
-                                              ),
-                                              onTap: () {
-                                                alertDialog(context,
-                                                    'Удалить компетенцию?', () {
-                                                  Navigator.pop(context);
-                                                });
-                                              },
-                                            ),
-                                          ),
+                                          // Padding(
+                                          //   padding: const EdgeInsets.only(
+                                          //       right: 5.0),
+                                          //   child: InkWell(
+                                          //     child: Image.asset(
+                                          //       'assets/images/bin.png',
+                                          //       color: Theme.of(context)
+                                          //           .colorScheme
+                                          //           .primary,
+                                          //       height: 35,
+                                          //     ),
+                                          //     onTap: () {
+                                          //       alertDialog(context,
+                                          //           'Удалить компетенцию?', () {
+                                          //         setState(() {
+                                          //           adminController.compList
+                                          //               .remove(
+                                          //                   pageList[index]);
+                                          //         });
+                                          //         Navigator.pop(context);
+                                          //       });
+                                          //     },
+                                          //   ),
+                                          // ),
                                         ],
                                       ),
                                     ],
@@ -408,9 +425,9 @@ class _CompsState extends State<Comps> {
                                                                         Level(
                                                                             id: 1,
                                                                             skills: [
-                                                                              Skill(id: 1, skillName: 'навык', fileInfo: {
-                                                                                1: 'filename.md'
-                                                                              })
+                                                                              Skill(id: 1, skillName: 'навык', fileInfo: [
+                                                                                'filename.md'
+                                                                              ])
                                                                             ],
                                                                             levelName: 'уровень',
                                                                             priority: 1,
@@ -457,38 +474,38 @@ class _CompsState extends State<Comps> {
                                                                           .levels?[
                                                                               j]
                                                                           .id;
-                                                                  setState(() {
-                                                                    if (levelInfo[
-                                                                            0] !=
-                                                                        '') {
-                                                                      pageList[
-                                                                              index]
-                                                                          .levels?[
-                                                                              j]
-                                                                          .levelName = levelInfo[0] !=
-                                                                              ''
-                                                                          ? levelInfo[
-                                                                              0]
-                                                                          : pageList[index]
-                                                                              .levels?[j]
-                                                                              .levelName;
-                                                                    }
-                                                                    if (levelInfo[
-                                                                            1] !=
-                                                                        '-1') {
-                                                                      pageList[
-                                                                              index]
-                                                                          .levels?[
-                                                                              j]
-                                                                          .priority = levelInfo[1] !=
-                                                                              '-1'
-                                                                          ? int.tryParse(levelInfo[
-                                                                              1])
-                                                                          : pageList[index]
-                                                                              .levels?[j]
-                                                                              .priority;
-                                                                    }
-                                                                  });
+                                                                  // setState(() {
+                                                                  //   if (levelInfo[
+                                                                  //           0] !=
+                                                                  //       '') {
+                                                                  //     pageList[
+                                                                  //             index]
+                                                                  //         .levels?[
+                                                                  //             j]
+                                                                  //         .levelName = levelInfo[0] !=
+                                                                  //             ''
+                                                                  //         ? levelInfo[
+                                                                  //             0]
+                                                                  //         : pageList[index]
+                                                                  //             .levels?[j]
+                                                                  //             .levelName;
+                                                                  //   }
+                                                                  //   if (levelInfo[
+                                                                  //           1] !=
+                                                                  //       '-1') {
+                                                                  //     pageList[
+                                                                  //             index]
+                                                                  //         .levels?[
+                                                                  //             j]
+                                                                  //         .priority = levelInfo[1] !=
+                                                                  //             '-1'
+                                                                  //         ? int.tryParse(levelInfo[
+                                                                  //             1])
+                                                                  //         : pageList[index]
+                                                                  //             .levels?[j]
+                                                                  //             .priority;
+                                                                  //   }
+                                                                  // });
                                                                   bool find =
                                                                       false;
                                                                   for (var i =
@@ -551,6 +568,15 @@ class _CompsState extends State<Comps> {
                                                                       context,
                                                                       'Удалить уровень?',
                                                                       () {
+                                                                    setState(
+                                                                        () {
+                                                                      adminController
+                                                                          .compList[
+                                                                              index]
+                                                                          .levels
+                                                                          ?.remove(
+                                                                              pageList[index].levels?[j]);
+                                                                    });
                                                                     Navigator.pop(
                                                                         context);
                                                                   });
@@ -593,9 +619,7 @@ class _CompsState extends State<Comps> {
                                   ),
                                 ),
                                 Visibility(
-                                  visible: levelVisibility.contains(index) &&
-                                      (pageList[index].levels?.isNotEmpty ??
-                                          false),
+                                  visible: levelVisibility.contains(index),
                                   child: Stack(
                                     children: [
                                       Container(
@@ -610,79 +634,78 @@ class _CompsState extends State<Comps> {
                                       Padding(
                                         padding:
                                             const EdgeInsets.only(left: 50.0),
-                                        child: Container(
-                                          height: 60,
-                                          decoration: BoxDecoration(
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .onSecondaryContainer,
-                                          ),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              InkWell(
-                                                child: Text(
+                                        child: InkWell(
+                                          child: Container(
+                                            height: 60,
+                                            decoration: BoxDecoration(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .onSecondaryContainer,
+                                            ),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text(
                                                   'Добавить новый уровень',
                                                   style: Theme.of(context)
                                                       .textTheme
                                                       .bodyLarge
                                                       ?.copyWith(fontSize: 30),
                                                 ),
-                                                onTap: () async {
-                                                  var levelInfo =
-                                                      await levelDialog(context,
-                                                          'Уровень:', -1, true);
-                                                  if (levelInfo != null &&
-                                                      levelInfo.isNotEmpty &&
-                                                      levelInfo[0] != '' &&
-                                                      levelInfo[1] != '-1') {
-                                                    var level = Level(
-                                                        id: pageList[index]
-                                                                    .levels
-                                                                    ?.isNotEmpty ??
-                                                                false
-                                                            ? pageList[index]
-                                                                    .levels!
-                                                                    .last
-                                                                    .id +
-                                                                1
-                                                            : 1,
-                                                        levelName: levelInfo[0],
-                                                        skills: [],
-                                                        priority: int.parse(
-                                                            levelInfo[1]),
-                                                        tests: []);
-                                                    setState(() {
-                                                      pageList[index]
-                                                          .levels
-                                                          ?.add(level);
-                                                    });
-                                                    bool find = false;
-                                                    var id = pageList[index].id;
-                                                    for (var i = 0;
-                                                        i <
-                                                                adminController
-                                                                    .compList
-                                                                    .length &&
-                                                            !find;
-                                                        i++) {
-                                                      if (adminController
-                                                              .compList[i].id ==
-                                                          id) {
-                                                        setState(() {
-                                                          find = true;
-                                                          pageList[index]
-                                                              .levels
-                                                              ?.add(level);
-                                                        });
-                                                      }
-                                                    }
-                                                  }
-                                                },
-                                              ),
-                                            ],
+                                              ],
+                                            ),
                                           ),
+                                          onTap: () async {
+                                            var levelInfo = await levelDialog(
+                                                context, 'Уровень:', -1, true);
+                                            if (levelInfo != null &&
+                                                levelInfo.isNotEmpty &&
+                                                levelInfo[0] != '' &&
+                                                levelInfo[1] != '-1') {
+                                              var level = Level(
+                                                  id: pageList[index]
+                                                              .levels
+                                                              ?.isNotEmpty ??
+                                                          false
+                                                      ? pageList[index]
+                                                              .levels!
+                                                              .last
+                                                              .id +
+                                                          1
+                                                      : 1,
+                                                  levelName: levelInfo[0],
+                                                  skills: [],
+                                                  priority:
+                                                      int.parse(levelInfo[1]),
+                                                  tests: []);
+                                              // setState(() {
+                                              //   pageList[index]
+                                              //       .levels
+                                              //       ?.add(level);
+                                              // });
+                                              bool find = false;
+                                              var id = pageList[index].id;
+                                              for (var i = 0;
+                                                  i <
+                                                          adminController
+                                                              .compList
+                                                              .length &&
+                                                      !find;
+                                                  i++) {
+                                                if (adminController
+                                                        .compList[i].id ==
+                                                    id) {
+                                                  setState(() {
+                                                    find = true;
+                                                    pageList[index]
+                                                        .levels
+                                                        ?.add(level);
+                                                  });
+                                                }
+                                              }
+                                            }
+                                          },
                                         ),
                                       ),
                                     ],
@@ -855,15 +878,17 @@ class _CompsState extends State<Comps> {
                       context, 'Введите название компетенции:', true);
                   if (name != null) {
                     var newComp = Competency(
-                        id: adminController.compList.last.id + 1,
+                        id: adminController.compList.isNotEmpty
+                            ? adminController.compList.last.id + 1
+                            : 1,
                         levels: [
                           Level(
-                            id: adminController.compList.last.id + 1,
+                            id: 1,
                             skills: [
                               Skill(
-                                  id: adminController.compList.last.id + 1,
+                                  id: 1,
                                   skillName: 'skill1',
-                                  fileInfo: {1: 'filename.md'})
+                                  fileInfo: ['filename.md'])
                             ],
                             levelName: 'level1',
                             priority: 1,
@@ -979,10 +1004,10 @@ class _CompsState extends State<Comps> {
   }
 
   Future<String?> editDialog(context, message, create) async {
+    String? newName;
     var newCompName = await showDialog(
         context: context,
         builder: (BuildContext context) {
-          String? newName;
           return AlertDialog(
             backgroundColor: Theme.of(context).colorScheme.onTertiaryContainer,
             title: Padding(
@@ -1050,10 +1075,11 @@ class _CompsState extends State<Comps> {
 
   Future<List<String>?> levelDialog(
       context, message, levelPriority, create) async {
+    List<String>? newData;
     var newLevelData = await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          List<String>? newData;
+      context: context,
+      builder: (BuildContext context) => StatefulBuilder(
+        builder: (BuildContext context, setState) {
           return AlertDialog(
             backgroundColor: Theme.of(context).colorScheme.onTertiaryContainer,
             title: Padding(
@@ -1076,7 +1102,7 @@ class _CompsState extends State<Comps> {
                       ),
                       LoginTextField(
                         text: 'Название',
-                        onChanged: (p0) => newData!.isEmpty
+                        onChanged: (p0) => (newData?.isEmpty ?? true)
                             ? newData = [p0, levelPriority.toString()]
                             : newData?[0] = p0,
                         enabled: true,
@@ -1119,9 +1145,11 @@ class _CompsState extends State<Comps> {
                         onSelected: (value) {
                           setState(() {
                             levelPriority = priority[value];
-                            (p0) => newData!.isEmpty
-                                ? newData = ['', p0.toString()]
-                                : newData?[1] = p0.toString();
+                            if (newData != null && newData!.isNotEmpty) {
+                              newData?[1] = priority[value].toString();
+                            } else {
+                              newData = ['', priority[value].toString()];
+                            }
                           });
                         },
                         popupMenuData: [
@@ -1162,7 +1190,9 @@ class _CompsState extends State<Comps> {
                 ]),
             actionsAlignment: MainAxisAlignment.spaceAround,
           );
-        });
+        },
+      ),
+    );
     return newLevelData;
   }
 

@@ -28,7 +28,7 @@ class AdminController extends GetxController {
       Level(
           id: 1,
           skills: [
-            Skill(id: 1, skillName: 'skill1', fileInfo: {1: 'filename.md'})
+            Skill(id: 1, skillName: 'skill1', fileInfo: ['filename.md'])
           ],
           levelName: 'level1',
           priority: 1,
@@ -343,7 +343,7 @@ class AdminController extends GetxController {
         Level(
             id: 1,
             skills: [
-              Skill(id: 1, skillName: 'skill1', fileInfo: {1: 'filename.md'})
+              Skill(id: 1, skillName: 'skill1', fileInfo: ['filename.md'])
             ],
             levelName: 'level1',
             priority: 1,
@@ -370,7 +370,7 @@ class AdminController extends GetxController {
         Level(
             id: 2,
             skills: [
-              Skill(id: 2, skillName: 'skill1', fileInfo: {1: 'filename.md'})
+              Skill(id: 2, skillName: 'skill1', fileInfo: ['filename.md'])
             ],
             levelName: 'level1',
             priority: 1,
@@ -397,7 +397,7 @@ class AdminController extends GetxController {
         Level(
             id: 3,
             skills: [
-              Skill(id: 3, skillName: 'skill1', fileInfo: {1: 'filename.md'})
+              Skill(id: 3, skillName: 'skill1', fileInfo: ['filename.md'])
             ],
             levelName: 'level1',
             priority: 1,
@@ -424,7 +424,7 @@ class AdminController extends GetxController {
         Level(
             id: 4,
             skills: [
-              Skill(id: 4, skillName: 'skill1', fileInfo: {1: 'filename.md'})
+              Skill(id: 4, skillName: 'skill1', fileInfo: ['filename.md'])
             ],
             levelName: 'level1',
             priority: 1,
@@ -451,7 +451,7 @@ class AdminController extends GetxController {
         Level(
             id: 5,
             skills: [
-              Skill(id: 5, skillName: 'skill1', fileInfo: {1: 'filename.md'})
+              Skill(id: 5, skillName: 'skill1', fileInfo: ['filename.md'])
             ],
             levelName: 'level1',
             priority: 1,
@@ -478,7 +478,7 @@ class AdminController extends GetxController {
         Level(
             id: 6,
             skills: [
-              Skill(id: 6, skillName: 'skill1', fileInfo: {1: 'filename.md'})
+              Skill(id: 6, skillName: 'skill1', fileInfo: ['filename.md'])
             ],
             levelName: 'level1',
             priority: 1,

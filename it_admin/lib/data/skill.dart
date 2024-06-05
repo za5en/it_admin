@@ -9,11 +9,11 @@ class Skill {
   int id;
   // List<File>? files;
   String? skillName;
-  Map? fileInfo;
+  List<String>? fileInfo;
 
   factory Skill.fromJson(Map<String, dynamic> json) => Skill(
         id: json["id"],
         skillName: json["skillName"],
-        fileInfo: json["fileInfo"],
+        fileInfo: List<String>.from((json["tests"] ?? []).map((x) => x)),
       );
 }
