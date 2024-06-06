@@ -877,9 +877,6 @@ class _CompsState extends State<Comps> {
                   var name = await editDialog(
                       context, 'Введите название компетенции:', true);
                   setState(() {});
-                  for (var i = 0; i < adminController.compList.length; i++) {
-                    print(adminController.compList[i].name);
-                  }
                   if (name != null) {
                     var newComp = Competency(
                         id: adminController.compList.isNotEmpty
