@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:it_admin/view/pages/auth.dart';
 import 'package:it_admin/view/pages/comps/comps.dart';
 
-import 'view/pages/login.dart';
 import 'view/pages/users/users.dart';
 
 class AppRouter {
@@ -10,7 +10,7 @@ class AppRouter {
     switch (settings.name) {
       case '/':
         return MaterialPageRoute(
-            settings: settings, builder: (_) => const Login());
+            settings: settings, builder: (_) => const Auth());
       case '/users':
         return MaterialPageRoute(
             settings: settings, builder: (_) => const Users());

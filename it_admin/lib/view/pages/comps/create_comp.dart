@@ -690,17 +690,18 @@ class _CreateCompState extends State<CreateComp> {
                                                       width: w * 0.9,
                                                       pad: false,
                                                       onPressed: () async {
-                                                        // fileDialog(context);
-                                                        setState(() {
-                                                          files.add(
-                                                              'markdown.xx');
-                                                          levels[index]
-                                                              .skills?[j]
-                                                              .fileInfo
-                                                              ?.add(
-                                                                  'markdown.xx');
-                                                          //update
-                                                        });
+                                                        var name =
+                                                            await fileDialog(
+                                                                context);
+                                                        if (name != null) {
+                                                          setState(() {
+                                                            files.add(name);
+                                                            levels[index]
+                                                                .skills?[j]
+                                                                .fileInfo
+                                                                ?.add(name);
+                                                          });
+                                                        }
                                                       },
                                                     ),
                                                   ),
@@ -762,16 +763,23 @@ class _CreateCompState extends State<CreateComp> {
                                                 levels[index].levelName ??
                                                     'уровень'));
                                       }
-                                      newTest = adminController.tempTest;
-                                      setState(() {
-                                        if (levels[index].tests.isEmpty) {
-                                          levels[index].tests.add(newTest);
-                                          test.add(newTest);
-                                        } else {
-                                          levels[index].tests[0] = newTest;
-                                          test[0] = newTest;
-                                        }
-                                      });
+                                      if ((newTest.testQs?.isNotEmpty ??
+                                              false) &&
+                                          (newTest.testAns?.isNotEmpty ??
+                                              false) &&
+                                          (newTest.testCorr?.isNotEmpty ??
+                                              false)) {
+                                        newTest = adminController.tempTest;
+                                        setState(() {
+                                          if (levels[index].tests.isEmpty) {
+                                            levels[index].tests.add(newTest);
+                                            test.add(newTest);
+                                          } else {
+                                            levels[index].tests[0] = newTest;
+                                            test[0] = newTest;
+                                          }
+                                        });
+                                      }
                                     },
                                   ),
                                 ),
@@ -921,10 +929,10 @@ class _CreateCompState extends State<CreateComp> {
   }
 
   Future<String?> fileDialog(context) async {
+    String? newFile;
     var newFileName = await showDialog(
         context: context,
         builder: (BuildContext context) {
-          String? newFile;
           return AlertDialog(
             backgroundColor: Theme.of(context).colorScheme.onTertiaryContainer,
             title: Padding(
@@ -949,7 +957,7 @@ class _CreateCompState extends State<CreateComp> {
                       Center(
                         child: InkWell(
                           child: Text(
-                            'Выберите файлы',
+                            'Выберите файл',
                             textAlign: TextAlign.center,
                             style: Theme.of(context)
                                 .textTheme
@@ -962,7 +970,10 @@ class _CreateCompState extends State<CreateComp> {
                             FilePickerResult? result =
                                 await FilePicker.platform.pickFiles();
                             if (result != null) {
-                              Get.snackbar('Path', result.files.single.path!);
+                              newFile = result.files.first.name;
+                              if (mounted) {
+                                Navigator.pop(context, newFile);
+                              }
                             } else {
                               Get.snackbar('Отмена', 'Файл не выбран');
                             }

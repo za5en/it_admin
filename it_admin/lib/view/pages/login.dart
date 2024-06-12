@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
+import 'package:it_admin/controllers/admin_controller.dart';
+// import 'package:it_admin/view/pages/auth.dart';
 
 import '../widgets/a_elevated_button.dart';
 
@@ -12,8 +14,10 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  var login = '';
+  var email = '';
   var password = '';
+
+  var adminController = Get.find<AdminController>();
   @override
   Widget build(BuildContext context) {
     double w = MediaQuery.of(context).size.width;
@@ -59,8 +63,8 @@ class _LoginState extends State<Login> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           LoginTextField(
-                            text: 'Логин',
-                            onChanged: (p0) => login = p0,
+                            text: 'Email или логин',
+                            onChanged: (p0) => email = p0,
                             enabled: true,
                             validator: (value) {
                               if (value == null) {
@@ -99,13 +103,12 @@ class _LoginState extends State<Login> {
               AElevatedButtonExtended(
                 text: 'Войти',
                 onPressed: () async {
-                  if (validateLogin(login) == null &&
+                  if (validateLogin(email) == null &&
                       validatePassword(password) == null) {
                     if (Hive.box('user').get('password') != null &&
                         password == Hive.box('user').get('password') &&
                         Hive.box('user').get('login') != null &&
-                        login == Hive.box('user').get('login')) {
-                      //! после подключения бэка убрать
+                        email == Hive.box('user').get('login')) {
                       showDialog(
                         barrierDismissible: false,
                         context: context,
@@ -114,13 +117,10 @@ class _LoginState extends State<Login> {
                               child: CircularProgressIndicator());
                         },
                       );
-                      //var adminController = Get.find<AdminController>();
-                      // var message =
-                      //     await adminController.getInfo(login, password);
-                      //!
-                      await Hive.box('user').put('login', login);
+                      await adminController.authPost(email, password);
+                      await adminController.authToken(email, password);
+                      await Hive.box('user').put('login', email);
                       await Hive.box('user').put('password', password);
-                      //!
                       await Hive.box('user').put('isLogged', true);
                       await Hive.box('settings')
                           .put('initial_screen', '/users');
@@ -130,8 +130,8 @@ class _LoginState extends State<Login> {
                       showAlertDialog(context, 'Данные указаны неверно');
                     }
                   } else {
-                    if (validateLogin(login) != null) {
-                      showAlertDialog(context, '${validateLogin(login)}\n');
+                    if (validateLogin(email) != null) {
+                      showAlertDialog(context, '${validateLogin(email)}\n');
                     } else {
                       showAlertDialog(
                           context, '${validatePassword(password)}\n');
@@ -300,7 +300,7 @@ void showAlertDialog(BuildContext context, String message) {
 
 extension Validator on String {
   bool isValidPassword() {
-    return RegExp(r'^(?=.*?[A-Za-z])(?=.*?[0-9])(?=.*?[!@#\$&*~_-]).{6,}$')
+    return RegExp(r'^(?=.*?[A-Za-z])(?=.*?[0-9])(?=.*?[!@#\$&*~_-]).{5,}$')
         .hasMatch(this);
   }
 }
@@ -316,14 +316,14 @@ String? validatePassword(String? password) {
   if (password == null) {
     return 'Это поле должно быть заполнено';
   }
-  if (password.length < 6) {
-    return 'Пароль должен содержать как минимум 6 символов';
+  if (password.length < 5) {
+    return 'Пароль должен содержать как минимум 5 символов';
   }
   if (password.length > 100) {
     return 'Пароль должен содержать до 100 символов';
   }
-  if (!password.isValidPassword()) {
-    return 'Пароль должен содержать латинские буквы, цифры и специальные символы (!@#\$&*~_-)';
-  }
+  // if (!password.isValidPassword()) {
+  //   return 'Пароль должен содержать латинские буквы, цифры и специальные символы (!@#\$&*~_-)';
+  // }
   return null;
 }

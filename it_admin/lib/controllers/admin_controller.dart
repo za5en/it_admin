@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:developer';
 
 import 'package:get/get.dart';
 import 'package:it_admin/data/competency.dart';
@@ -57,57 +59,78 @@ class AdminController extends GetxController {
       isActive: true,
       comps: [
         UserCompetency(
-          id: 1,
-          name: 'competency1',
-          tests: [
-            UserTest(
+          id: 2,
+          name: 'Java',
+          levels: [
+            UserLevel(
               id: 1,
-              testQs: ['Вопрос 1', 'Вопрос 2', 'Вопрос 3', 'Вопрос 4'],
-              testAns: {
-                1: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
-                2: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
-                3: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
-                4: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4']
-              },
-              testCorr: [2, 3, 1, 2],
-              userAns: [2, 3, 1, 1],
-              testTime: 15,
-              testTimeStart: DateTime.now(),
-              solutionDuration: 12,
-            )
+              levelName: 'Уровень 0',
+              tests: [
+                UserTest(
+                  id: 2,
+                  testQs: ['Вопрос 1', 'Вопрос 2', 'Вопрос 3', 'Вопрос 4'],
+                  testAns: {
+                    1: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
+                    2: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
+                    3: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
+                    4: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4']
+                  },
+                  testCorr: [2, 3, 1, 2],
+                  userAns: [2, 3, 1, 1],
+                  testTime: 15,
+                  testTimeStart: DateTime.now(),
+                  solutionDuration: 12,
+                )
+              ],
+              isCompleted: true,
+            ),
           ],
-          isCompleted: true,
         ),
       ],
     ),
     User(
       id: 2,
-      email: 'vlasov@mail.ru',
+      email: 'za5en@yandex.ru',
       name: 'Власов Федор Андреевич',
       isActive: true,
       comps: [
-        UserCompetency(
-          id: 1,
-          name: 'competency1',
-          tests: [
-            UserTest(
-              id: 1,
-              testQs: ['Вопрос 1', 'Вопрос 2', 'Вопрос 3', 'Вопрос 4'],
-              testAns: {
-                1: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
-                2: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
-                3: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
-                4: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4']
-              },
-              testCorr: [2, 3, 1, 2],
-              userAns: [2, 3, 1, 1],
-              testTime: 15,
-              testTimeStart: DateTime.now(),
-              solutionDuration: 12,
-            )
-          ],
-          isCompleted: true,
-        ),
+        UserCompetency(id: 1, name: 'C#', levels: [
+          UserLevel(
+            id: 1,
+            levelName: 'Уровень 0',
+            tests: [
+              UserTest(
+                id: 1,
+                testQs: [
+                  'Какого типа наследования не существует?',
+                  'Основные принципы ООП',
+                  'Алгоритмическая сложность для чтения в Dictionary',
+                  'Два ключевых оператора для работы с асинхронными вызовами'
+                ],
+                testAns: {
+                  1: ['Одноуровневое', 'Двухуровневое', 'Многоуровневое'],
+                  2: [
+                    'инкапсуляция, наследование, полиморфизм и модуляция',
+                    'инкапсуляция, наследование, полиморфизм и абстракция',
+                    'конъюнкция, дизъюнкция, полиморфизм и импликация'
+                  ],
+                  3: ['O(n)', 'O(1)', 'O(log(n))'],
+                  4: [
+                    'await в заголовке метода, async при вызове метода',
+                    'async в заголовке метода, await при вызове метода',
+                    'await в заголовке, await и async при вызове'
+                  ]
+                },
+                testCorr: [2, 2, 2, 2],
+                userAns: [2, 2, 2, 2],
+                testTime: 15,
+                testTimeStart: DateTime.now(),
+                solutionDuration: 12,
+              )
+            ],
+            isCompleted: true,
+          )
+        ]),
       ],
     ),
     User(
@@ -116,28 +139,30 @@ class AdminController extends GetxController {
       name: 'Сергеев Георгий Григорьевич',
       isActive: true,
       comps: [
-        UserCompetency(
-          id: 1,
-          name: 'competency1',
-          tests: [
-            UserTest(
-              id: 1,
-              testQs: ['Вопрос 1', 'Вопрос 2', 'Вопрос 3', 'Вопрос 4'],
-              testAns: {
-                1: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
-                2: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
-                3: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
-                4: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4']
-              },
-              testCorr: [2, 3, 1, 2],
-              userAns: [2, 3, 1, 1],
-              testTime: 15,
-              testTimeStart: DateTime.now(),
-              solutionDuration: 12,
-            )
-          ],
-          isCompleted: true,
-        ),
+        UserCompetency(id: 2, name: 'Java', levels: [
+          UserLevel(
+            id: 2,
+            levelName: 'Уровень 0',
+            tests: [
+              UserTest(
+                id: 1,
+                testQs: ['Вопрос 1', 'Вопрос 2', 'Вопрос 3', 'Вопрос 4'],
+                testAns: {
+                  1: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
+                  2: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
+                  3: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
+                  4: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4']
+                },
+                testCorr: [2, 3, 1, 2],
+                userAns: [2, 3, 1, 1],
+                testTime: 15,
+                testTimeStart: DateTime.now(),
+                solutionDuration: 12,
+              )
+            ],
+            isCompleted: true,
+          ),
+        ]),
       ],
     ),
     User(
@@ -146,28 +171,30 @@ class AdminController extends GetxController {
       name: 'Широбоков Артём Алексеевич',
       isActive: true,
       comps: [
-        UserCompetency(
-          id: 1,
-          name: 'competency1',
-          tests: [
-            UserTest(
-              id: 1,
-              testQs: ['Вопрос 1', 'Вопрос 2', 'Вопрос 3', 'Вопрос 4'],
-              testAns: {
-                1: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
-                2: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
-                3: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
-                4: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4']
-              },
-              testCorr: [2, 3, 1, 2],
-              userAns: [2, 3, 1, 1],
-              testTime: 15,
-              testTimeStart: DateTime.now(),
-              solutionDuration: 12,
-            )
-          ],
-          isCompleted: true,
-        ),
+        UserCompetency(id: 2, name: 'Java', levels: [
+          UserLevel(
+            id: 2,
+            levelName: 'Уровень 0',
+            tests: [
+              UserTest(
+                id: 1,
+                testQs: ['Вопрос 1', 'Вопрос 2', 'Вопрос 3', 'Вопрос 4'],
+                testAns: {
+                  1: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
+                  2: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
+                  3: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
+                  4: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4']
+                },
+                testCorr: [2, 3, 1, 2],
+                userAns: [2, 3, 1, 1],
+                testTime: 15,
+                testTimeStart: DateTime.now(),
+                solutionDuration: 12,
+              )
+            ],
+            isCompleted: true,
+          ),
+        ]),
       ],
     ),
     User(
@@ -183,28 +210,30 @@ class AdminController extends GetxController {
       name: 'Перевозчиков Алексей Артёмович',
       isActive: true,
       comps: [
-        UserCompetency(
-          id: 1,
-          name: 'competency1',
-          tests: [
-            UserTest(
-              id: 1,
-              testQs: ['Вопрос 1', 'Вопрос 2', 'Вопрос 3', 'Вопрос 4'],
-              testAns: {
-                1: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
-                2: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
-                3: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
-                4: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4']
-              },
-              testCorr: [2, 3, 1, 2],
-              userAns: [2, 3, 1, 1],
-              testTime: 15,
-              testTimeStart: DateTime.now(),
-              solutionDuration: 12,
-            )
-          ],
-          isCompleted: true,
-        ),
+        UserCompetency(id: 2, name: 'Java', levels: [
+          UserLevel(
+            id: 2,
+            levelName: 'Уровень 0',
+            tests: [
+              UserTest(
+                id: 1,
+                testQs: ['Вопрос 1', 'Вопрос 2', 'Вопрос 3', 'Вопрос 4'],
+                testAns: {
+                  1: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
+                  2: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
+                  3: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
+                  4: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4']
+                },
+                testCorr: [2, 3, 1, 2],
+                userAns: [2, 3, 1, 1],
+                testTime: 15,
+                testTimeStart: DateTime.now(),
+                solutionDuration: 12,
+              )
+            ],
+            isCompleted: true,
+          ),
+        ]),
       ],
     ),
     User(
@@ -217,7 +246,7 @@ class AdminController extends GetxController {
     User(
       id: 8,
       email: 'stulis@mail.ru',
-      name: 'Табуреткин Иван Самвелович',
+      name: 'Стулин Илья Самвелович',
       isActive: true,
       comps: [],
     ),
@@ -231,7 +260,7 @@ class AdminController extends GetxController {
     User(
       id: 10,
       email: 'nuance@mail.ru',
-      name: 'Нюансов Пётр Михайлович',
+      name: 'Новгородов Пётр Михайлович',
       isActive: true,
       comps: [],
     ),
@@ -343,21 +372,41 @@ class AdminController extends GetxController {
         Level(
             id: 1,
             skills: [
-              Skill(id: 1, skillName: 'skill1', fileInfo: ['filename.md'])
+              Skill(
+                  id: 1,
+                  skillName: 'ООП',
+                  fileInfo: ['ООП_Основы.md', 'ООП_Принципы.md']),
+              Skill(
+                  id: 2,
+                  skillName: 'Синтаксис',
+                  fileInfo: ['Синтаксис_C#.md', 'Синтаксис_C#_доп.md']),
             ],
-            levelName: 'level1',
+            levelName: 'Уровень 0',
             priority: 1,
             tests: [
               Test(
                 id: 1,
-                testQs: ['Вопрос 1', 'Вопрос 2', 'Вопрос 3', 'Вопрос 4'],
+                testQs: [
+                  'Какого типа наследования не существует?',
+                  'Основные принципы ООП',
+                  'Алгоритмическая сложность для чтения в Dictionary',
+                  'Два ключевых оператора для работы с асинхронными вызовами'
+                ],
                 testAns: {
-                  1: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
-                  2: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
-                  3: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'],
-                  4: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4']
+                  1: ['Одноуровневое', 'Двухуровневое', 'Многоуровневое'],
+                  2: [
+                    'инкапсуляция, наследование, полиморфизм и модуляция',
+                    'инкапсуляция, наследование, полиморфизм и абстракция',
+                    'конъюнкция, дизъюнкция, полиморфизм и импликация'
+                  ],
+                  3: ['O(n)', 'O(1)', 'O(log(n))'],
+                  4: [
+                    'await в заголовке метода, async при вызове метода',
+                    'async в заголовке метода, await при вызове метода',
+                    'await в заголовке, await и async при вызове'
+                  ]
                 },
-                testCorr: [2, 3, 1, 2],
+                testCorr: [2, 2, 2, 2],
                 testTime: 15,
               )
             ])
@@ -372,7 +421,7 @@ class AdminController extends GetxController {
             skills: [
               Skill(id: 2, skillName: 'skill1', fileInfo: ['filename.md'])
             ],
-            levelName: 'level1',
+            levelName: 'Уровень 0',
             priority: 1,
             tests: [
               Test(
@@ -399,7 +448,7 @@ class AdminController extends GetxController {
             skills: [
               Skill(id: 3, skillName: 'skill1', fileInfo: ['filename.md'])
             ],
-            levelName: 'level1',
+            levelName: 'Уровень 0',
             priority: 1,
             tests: [
               Test(
@@ -426,7 +475,7 @@ class AdminController extends GetxController {
             skills: [
               Skill(id: 4, skillName: 'skill1', fileInfo: ['filename.md'])
             ],
-            levelName: 'level1',
+            levelName: 'Уровень 0',
             priority: 1,
             tests: [
               Test(
@@ -453,7 +502,7 @@ class AdminController extends GetxController {
             skills: [
               Skill(id: 5, skillName: 'skill1', fileInfo: ['filename.md'])
             ],
-            levelName: 'level1',
+            levelName: 'Уровень 0',
             priority: 1,
             tests: [
               Test(
@@ -480,7 +529,7 @@ class AdminController extends GetxController {
             skills: [
               Skill(id: 6, skillName: 'skill1', fileInfo: ['filename.md'])
             ],
-            levelName: 'level1',
+            levelName: 'Уровень 0',
             priority: 1,
             tests: [
               Test(
@@ -502,6 +551,16 @@ class AdminController extends GetxController {
 
   var tempTest =
       Test(id: 1, testQs: [], testAns: {}, testCorr: [], testTime: 0);
+
+  var authPage = '';
+
+  var link = '';
+
+  var cookie = '';
+
+  var redirect = '';
+
+  var code = '';
 
   User get user => _userData;
   Competency get comp => _compData;
@@ -530,5 +589,57 @@ class AdminController extends GetxController {
     tempTest.testAns = testAns;
     tempTest.testCorr = testCorr;
     tempTest.testTime = testTime;
+  }
+
+  Future<int> auth() async {
+    var response = await _remoteAdminServices.auth();
+    authPage = response.body;
+    var index = authPage.indexOf('action="');
+    link = authPage.substring(index + 8);
+    index = link.indexOf('"');
+    link = link.substring(0, index);
+    link = link.replaceAll('amp;', '');
+    index = link.indexOf('/realms');
+    link = link.substring(index);
+
+    cookie = response.headers['set-cookie'] ?? '';
+    // index = cookie.indexOf('KC_RESTART=');
+    // cookie = cookie.substring(index + 11);
+    cookie = cookie.replaceAll(
+        'Version=1;Path=/realms/assistant-app/;Secure;HttpOnly;SameSite=None,',
+        ' ');
+    cookie = cookie.replaceAll(
+        'Version=1;Path=/realms/assistant-app/;HttpOnly,', ' ');
+    cookie = cookie.replaceAll(
+        ';Version=1;Path=/realms/assistant-app/;HttpOnly', '');
+    log(cookie);
+
+    authPage = authPage.replaceAll(
+        '/resources', 'http://192.168.31.93:8004/resources');
+    authPage =
+        authPage.replaceAll('"/realms', '"http://192.168.31.93:8004/realms');
+    return response.statusCode;
+  }
+
+  Future<int> authPost(String login, String password) async {
+    var response =
+        await _remoteAdminServices.authPost(login, password, link, cookie);
+    var location = response.headers['location'] ?? '';
+    var index = location.indexOf('?');
+    redirect = location.substring(0, index);
+    index = location.indexOf('code=');
+    code = location.substring(index + 5);
+
+    return response.statusCode;
+  }
+
+  Future<int> authToken(String login, String password) async {
+    var toEncode = '$login:$password';
+    Codec<String, String> stringToBase64 = utf8.fuse(base64);
+    String encoded = stringToBase64.encode(toEncode);
+    var response = await _remoteAdminServices.authToken(code, redirect, encoded,
+        login: login, password: password);
+
+    return response.statusCode;
   }
 }

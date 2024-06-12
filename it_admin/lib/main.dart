@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+// import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -10,8 +11,11 @@ import 'package:it_admin/view/resources/color_themes.dart';
 import 'app_router.dart';
 import 'controllers/hive_controller.dart';
 
+// InAppLocalhostServer localhostServer = InAppLocalhostServer();
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // await localhostServer.start();
   Intl.systemLocale = await findSystemLocale();
   await initializeDateFormatting();
   await HiveController.initHive();
@@ -51,6 +55,12 @@ class _ItAdminAppState extends State<ItAdminApp> {
     // );
     super.initState();
   }
+
+  // @override
+  // void dispose() {
+  //   localhostServer.close();
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {

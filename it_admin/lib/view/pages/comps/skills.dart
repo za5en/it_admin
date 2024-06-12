@@ -653,8 +653,70 @@ class _SkillsState extends State<Skills> {
                                               ],
                                             ),
                                           ),
-                                          onTap: () {
-                                            fileDialog(context);
+                                          onTap: () async {
+                                            var name =
+                                                await fileDialog(context);
+                                            if (name != null) {
+                                              bool find = false;
+                                              for (var i = 0;
+                                                  i <
+                                                          adminController
+                                                              .compList
+                                                              .length &&
+                                                      !find;
+                                                  i++) {
+                                                if (adminController
+                                                        .compList[i].id ==
+                                                    widget.compId) {
+                                                  for (var k = 0;
+                                                      k <
+                                                              (adminController
+                                                                      .compList[
+                                                                          i]
+                                                                      .levels
+                                                                      ?.length ??
+                                                                  0) &&
+                                                          !find;
+                                                      k++) {
+                                                    if (adminController
+                                                            .compList[i]
+                                                            .levels?[k]
+                                                            .id ==
+                                                        widget.level.id) {
+                                                      for (var l = 0;
+                                                          l <
+                                                                  (adminController
+                                                                          .compList[
+                                                                              i]
+                                                                          .levels?[
+                                                                              k]
+                                                                          .skills
+                                                                          ?.length ??
+                                                                      1) &&
+                                                              !find;
+                                                          l++) {
+                                                        if (adminController
+                                                                .compList[i]
+                                                                .levels?[k]
+                                                                .skills?[l]
+                                                                .id ==
+                                                            skills[index].id) {
+                                                          setState(() {
+                                                            find = true;
+                                                            adminController
+                                                                .compList[i]
+                                                                .levels?[k]
+                                                                .skills?[l]
+                                                                .fileInfo
+                                                                ?.add(name);
+                                                          });
+                                                        }
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
                                           },
                                         ),
                                       ),
@@ -870,7 +932,7 @@ class _SkillsState extends State<Skills> {
                       Center(
                         child: InkWell(
                           child: Text(
-                            'Выберите файлы',
+                            'Выберите файл',
                             textAlign: TextAlign.center,
                             style: Theme.of(context)
                                 .textTheme
@@ -883,7 +945,10 @@ class _SkillsState extends State<Skills> {
                             FilePickerResult? result =
                                 await FilePicker.platform.pickFiles();
                             if (result != null) {
-                              Get.snackbar('Path', result.files.single.path!);
+                              newFile = result.files.single.name;
+                              if (mounted) {
+                                Navigator.pop(context, newFile);
+                              }
                             } else {
                               Get.snackbar('Отмена', 'Файл не выбран');
                             }

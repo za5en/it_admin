@@ -28,12 +28,37 @@ class UserCompetency {
   UserCompetency({
     required this.id,
     required this.name,
+    required this.levels,
+  });
+
+  int id;
+  String? name;
+  List<UserLevel> levels;
+
+  factory UserCompetency.fromJson(Map<String, dynamic> json) => UserCompetency(
+        id: json["id"],
+        name: json["levelName"],
+        levels: List<UserLevel>.from((json["tests"] ?? []).map((x) => x)),
+      );
+}
+
+class UserLevel {
+  UserLevel({
+    required this.id,
+    required this.levelName,
     required this.isCompleted,
     required this.tests,
   });
 
   int id;
-  String? name;
+  String? levelName;
   bool? isCompleted;
   List<UserTest>? tests;
+
+  factory UserLevel.fromJson(Map<String, dynamic> json) => UserLevel(
+        id: json["id"],
+        levelName: json["levelName"],
+        isCompleted: json["isCompleted"],
+        tests: List<UserTest>.from((json["tests"] ?? []).map((x) => x)),
+      );
 }

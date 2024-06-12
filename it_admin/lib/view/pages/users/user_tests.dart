@@ -8,9 +8,9 @@ import '../../../data/user.dart';
 import '../../widgets/a_app_bar.dart';
 
 class UserTests extends StatefulWidget {
-  const UserTests({super.key, required this.userName, required this.comp});
+  const UserTests({super.key, required this.userName, required this.level});
   final String userName;
-  final UserCompetency comp;
+  final UserLevel level;
 
   @override
   State<UserTests> createState() => _UserTestsState();
@@ -20,7 +20,7 @@ class _UserTestsState extends State<UserTests> {
   var adminController = Get.find<AdminController>();
   @override
   Widget build(BuildContext context) {
-    var len = widget.comp.tests?.length ?? 0;
+    var len = widget.level.tests?.length ?? 0;
 
     double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
@@ -61,7 +61,7 @@ class _UserTestsState extends State<UserTests> {
                 Padding(
                   padding: const EdgeInsets.only(top: 35.0),
                   child: Text(
-                    'История прохождения тестов по ${widget.comp.name}',
+                    'История прохождения тестов по ${widget.level.levelName}',
                     style: Theme.of(context)
                         .textTheme
                         .titleLarge
@@ -111,7 +111,7 @@ class _UserTestsState extends State<UserTests> {
                                                     left: 30.0,
                                                     right: 30.0),
                                                 child: Text(
-                                                  'тест: ${widget.comp.tests?[index].testTimeStart.toString() ?? DateTime.now().toString()}',
+                                                  'тест: ${widget.level.tests?[index].testTimeStart.toString() ?? DateTime.now().toString()}',
                                                   style: Theme.of(context)
                                                       .textTheme
                                                       .titleLarge
@@ -121,7 +121,7 @@ class _UserTestsState extends State<UserTests> {
                                               onTap: () {
                                                 Get.to(() => TestRes(
                                                     userName: widget.userName,
-                                                    test: widget.comp
+                                                    test: widget.level
                                                             .tests?[index] ??
                                                         UserTest(
                                                           id: 1,

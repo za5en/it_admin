@@ -11,8 +11,9 @@ import '../../widgets/a_pop_up.dart';
 import '../../widgets/a_svg_icon.dart';
 
 class UserComps extends StatefulWidget {
-  const UserComps({super.key, required this.user});
+  const UserComps({super.key, required this.user, required this.userIndex});
   final User user;
+  final int userIndex;
 
   @override
   State<UserComps> createState() => _UserCompsState();
@@ -22,17 +23,23 @@ class _UserCompsState extends State<UserComps> {
   var name = 'Название компетенции';
   var page = 1;
   var adminController = Get.find<AdminController>();
-  var pageList = [];
+  List<UserCompetency> pageList = [];
   bool filter = false;
+  List<int> levelVisibility = [];
   @override
   Widget build(BuildContext context) {
     int len = widget.user.comps?.length ?? 1;
+    int levelsLength = 0;
     int pages = len ~/ 10 + 1;
     if (!filter) {
       pageList = len < 10 * page
           ? widget.user.comps?.getRange(10 * (page - 1), len).toList() ?? []
           : widget.user.comps?.getRange(10 * (page - 1), 10 * page).toList() ??
               [];
+    }
+
+    for (var i = 0; i < levelVisibility.length; i++) {
+      levelsLength += pageList[levelVisibility[i]].levels.length;
     }
 
     var compList = ['Название компетенции'];
@@ -124,13 +131,19 @@ class _UserCompsState extends State<UserComps> {
                                 name = compList[value];
                                 if (name != 'Название компетенции') {
                                   setState(() {
-                                    pageList = adminController.compList.length <
+                                    pageList = (adminController
+                                                    .userList[widget.userIndex]
+                                                    .comps
+                                                    ?.length ??
+                                                0) <
                                             10 * page
-                                        ? adminController.compList
+                                        ? adminController
+                                            .userList[widget.userIndex].comps!
                                             .getRange(10 * (page - 1),
                                                 adminController.compList.length)
                                             .toList()
-                                        : adminController.compList
+                                        : adminController
+                                            .userList[widget.userIndex].comps!
                                             .getRange(
                                                 10 * (page - 1), 10 * page)
                                             .toList();
@@ -142,13 +155,19 @@ class _UserCompsState extends State<UserComps> {
                                   });
                                 } else {
                                   setState(() {
-                                    pageList = adminController.compList.length <
+                                    pageList = (adminController
+                                                    .userList[widget.userIndex]
+                                                    .comps
+                                                    ?.length ??
+                                                0) <
                                             10 * page
-                                        ? adminController.compList
+                                        ? adminController
+                                            .userList[widget.userIndex].comps!
                                             .getRange(10 * (page - 1),
                                                 adminController.compList.length)
                                             .toList()
-                                        : adminController.compList
+                                        : adminController
+                                            .userList[widget.userIndex].comps!
                                             .getRange(
                                                 10 * (page - 1), 10 * page)
                                             .toList();
@@ -201,7 +220,9 @@ class _UserCompsState extends State<UserComps> {
               Padding(
                 padding: const EdgeInsets.only(top: 10.0, bottom: 35.0),
                 child: Container(
-                  height: pageList.length < 10 ? pageList.length * 65 : 650,
+                  height: pageList.length < 10
+                      ? pageList.length * 66 + levelsLength * 60.5
+                      : levelsLength * 60.5 + 660,
                   width: w * 0.98,
                   decoration: BoxDecoration(
                     color: Theme.of(context).colorScheme.secondary,
@@ -211,88 +232,227 @@ class _UserCompsState extends State<UserComps> {
                     child: Padding(
                       padding: const EdgeInsets.only(top: 10.0),
                       child: ListView.builder(
-                          itemCount: pageList.length,
-                          itemBuilder: (context, index) {
-                            return Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 10.0, right: 10.0),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          InkWell(
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 30.0, right: 30.0),
-                                              child: Text(
-                                                pageList[index].name ??
-                                                    'competency',
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .titleLarge
-                                                    ?.copyWith(fontSize: 30),
-                                              ),
-                                            ),
-                                            onTap: () {
-                                              Get.to(() => UserTests(
-                                                  userName: widget.user.name ??
-                                                      'user',
-                                                  comp: pageList[index]));
-                                            },
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          Visibility(
-                                            visible: widget.user.comps?[index]
-                                                    .isCompleted ??
-                                                false,
-                                            child: Image.asset(
-                                              'assets/images/tick.png',
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .primary,
-                                              height: 45,
+                        itemCount: pageList.length,
+                        itemBuilder: (context, index) {
+                          return Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 10.0, right: 10.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        InkWell(
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 30.0,
+                                                right: 30.0,
+                                                top: 5.0,
+                                                bottom: 5.0),
+                                            child: Text(
+                                              pageList[index].name ??
+                                                  'competency',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .titleLarge
+                                                  ?.copyWith(fontSize: 30),
                                             ),
                                           ),
-                                          const SizedBox(
-                                            width: 30.0,
-                                          ),
-                                          InkWell(
-                                            child: Image.asset(
-                                              'assets/images/testing.png',
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .primary,
-                                              height: 45,
-                                            ),
-                                            onTap: () {
-                                              Get.to(() => UserTests(
-                                                  userName: widget.user.name ??
-                                                      'user',
-                                                  comp: pageList[index]));
-                                            },
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
+                                          onTap: () {
+                                            if (levelVisibility
+                                                .contains(index)) {
+                                              setState(() {
+                                                levelVisibility.remove(index);
+                                              });
+                                            } else {
+                                              setState(() {
+                                                levelVisibility.add(index);
+                                              });
+                                            }
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ],
                                 ),
-                                Visibility(
-                                  visible: index < pageList.length - 1,
-                                  child: const Divider(
+                              ),
+                              Visibility(
+                                visible: levelVisibility.contains(index),
+                                child: const Padding(
+                                  padding: EdgeInsets.only(top: 10.0),
+                                  child: Divider(
                                     thickness: 0.0,
-                                    height: 19,
+                                    height: 1,
                                   ),
                                 ),
-                              ],
-                            );
-                          }),
+                              ),
+                              Visibility(
+                                visible: levelVisibility.contains(index) &&
+                                    pageList[index].levels.isNotEmpty,
+                                child: SizedBox(
+                                  height: pageList[index].levels.length * 61,
+                                  child: ListView.builder(
+                                    itemCount: pageList[index].levels.length,
+                                    itemBuilder: (context, j) {
+                                      return Column(
+                                        children: [
+                                          Stack(
+                                            children: [
+                                              Container(
+                                                height: 60,
+                                                width: 50,
+                                                decoration: BoxDecoration(
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .background,
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 50.0),
+                                                child: Container(
+                                                  height: 60,
+                                                  decoration: BoxDecoration(
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .surface,
+                                                  ),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Row(
+                                                        children: [
+                                                          InkWell(
+                                                            child: Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .only(
+                                                                      left:
+                                                                          40.0,
+                                                                      right:
+                                                                          40.0),
+                                                              child: Text(
+                                                                pageList[index]
+                                                                        .levels[
+                                                                            j]
+                                                                        .levelName ??
+                                                                    'level',
+                                                                style: Theme.of(
+                                                                        context)
+                                                                    .textTheme
+                                                                    .titleLarge
+                                                                    ?.copyWith(
+                                                                        fontSize:
+                                                                            30),
+                                                              ),
+                                                            ),
+                                                            onTap: () {
+                                                              Get.to(() => UserTests(
+                                                                  userName: widget
+                                                                          .user
+                                                                          .name ??
+                                                                      'user',
+                                                                  level: pageList[
+                                                                          index]
+                                                                      .levels[j]));
+                                                            },
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      Row(
+                                                        children: [
+                                                          Visibility(
+                                                            visible: widget
+                                                                    .user
+                                                                    .comps?[
+                                                                        index]
+                                                                    .levels[j]
+                                                                    .isCompleted ??
+                                                                false,
+                                                            child: Image.asset(
+                                                              'assets/images/tick.png',
+                                                              color: Theme.of(
+                                                                      context)
+                                                                  .colorScheme
+                                                                  .primary,
+                                                              height: 45,
+                                                            ),
+                                                          ),
+                                                          const SizedBox(
+                                                            width: 30.0,
+                                                          ),
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .only(
+                                                                    right:
+                                                                        15.0),
+                                                            child: InkWell(
+                                                              child:
+                                                                  Image.asset(
+                                                                'assets/images/testing.png',
+                                                                color: Theme.of(
+                                                                        context)
+                                                                    .colorScheme
+                                                                    .primary,
+                                                                height: 45,
+                                                              ),
+                                                              onTap: () {
+                                                                Get.to(() => UserTests(
+                                                                    userName: widget
+                                                                            .user
+                                                                            .name ??
+                                                                        'user',
+                                                                    level: pageList[
+                                                                            index]
+                                                                        .levels[j]));
+                                                              },
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          Stack(
+                                            children: [
+                                              Container(
+                                                height: 1,
+                                                width: 50,
+                                                decoration: BoxDecoration(
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .background,
+                                                ),
+                                              ),
+                                              const Padding(
+                                                padding:
+                                                    EdgeInsets.only(left: 50.0),
+                                                child: Divider(
+                                                  thickness: 0.0,
+                                                  height: 1,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
                     ),
                   ),
                 ),

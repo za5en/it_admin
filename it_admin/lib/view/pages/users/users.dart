@@ -23,10 +23,11 @@ class _UsersState extends State<Users> {
   var pageList = [];
   bool filter = false;
   var search = '';
+  int pages = 1;
   @override
   Widget build(BuildContext context) {
-    int pages = adminController.userList.length ~/ 10 + 1;
     if (!filter) {
+      pages = adminController.userList.length ~/ 10 + 1;
       pageList = adminController.userList.length < 10 * page
           ? adminController.userList
               .getRange(10 * (page - 1), adminController.userList.length)
@@ -161,6 +162,8 @@ class _UsersState extends State<Users> {
                                                 .contains(search.toLowerCase()))
                                             .toList();
                                         filter = true;
+                                        pages = pageList.length ~/ 10 + 1;
+                                        page = 1;
                                       });
                                     } else {
                                       setState(() {
@@ -178,6 +181,10 @@ class _UsersState extends State<Users> {
                                                     10 * (page - 1), 10 * page)
                                                 .toList();
                                         filter = false;
+                                        pages =
+                                            adminController.userList.length ~/
+                                                    10 +
+                                                1;
                                       });
                                     }
                                   });
@@ -244,7 +251,9 @@ class _UsersState extends State<Users> {
                                             ),
                                             onTap: () {
                                               Get.to(() => UserComps(
-                                                  user: pageList[index]));
+                                                    user: pageList[index],
+                                                    userIndex: index,
+                                                  ));
                                             },
                                           ),
                                           InkWell(
