@@ -570,18 +570,6 @@ class AdminController extends GetxController {
 
   AdminController();
 
-  Future<void> getInfo(String userId, String password) async {
-    var response = await _remoteAdminServices.getInfo(
-      userId,
-      password,
-    );
-    var data = Data.fromJson(response.body);
-    if (data.isSuccess) {
-      _userData = User.fromJson(data.data);
-      _compData = Competency.fromJson(data.data);
-    }
-  }
-
   void setTest(int id, List<String> testQs, Map testAns, List<int> testCorr,
       int testTime) {
     tempTest.id = id;
@@ -641,5 +629,152 @@ class AdminController extends GetxController {
         login: login, password: password);
 
     return response.statusCode;
+  }
+
+  Future<void> getFile(String dir, String fileName) async {
+    var response = await _remoteAdminServices.getFile(dir, fileName);
+    var data = Data.fromJson(response.body);
+    if (data.isSuccess) {
+      _userData = User.fromJson(data.data);
+    }
+  }
+
+  Future<void> addFile(List<int> bytes, String fileName) async {
+    var response = await _remoteAdminServices.addFile(bytes, fileName);
+    var data = Data.fromJson(response.body);
+    if (data.isSuccess) {
+      _userData = User.fromJson(data.data);
+    }
+  }
+
+  Future<void> addFileToDir(
+      String dir, List<int> bytes, String fileName) async {
+    var response =
+        await _remoteAdminServices.addFileToDir(dir, bytes, fileName);
+    var data = Data.fromJson(response.body);
+    if (data.isSuccess) {
+      _userData = User.fromJson(data.data);
+    }
+  }
+
+  Future<void> getUserInfo(String email) async {
+    var response = await _remoteAdminServices.getUserInfo(email);
+    var data = Data.fromJson(response.body);
+    if (data.isSuccess) {
+      _userData = User.fromJson(data.data);
+      _compData = Competency.fromJson(data.data);
+    }
+  }
+
+  Future<void> getUsers(String fullName, int page, int size) async {
+    var response = await _remoteAdminServices.getUsers(fullName, page, size);
+    var data = Data.fromJson(response.body);
+    if (data.isSuccess) {
+      _userData = User.fromJson(data.data);
+    }
+  }
+
+  Future<void> editUserInfo(
+      String name, String surname, String patronymic, String email) async {
+    var response = await _remoteAdminServices.editInfo(
+        _userData.id, name, surname, patronymic, email);
+    var data = Data.fromJson(response.body);
+    if (data.isSuccess) {
+      _userData = User.fromJson(data.data);
+    }
+  }
+
+  Future<void> getComps(String name, int page, int size) async {
+    var response = await _remoteAdminServices.getCompetencies(name, page, size);
+    var data = Data.fromJson(response.body);
+    if (data.isSuccess) {
+      _userData = User.fromJson(data.data);
+    }
+  }
+
+  Future<void> getUniqueComps() async {
+    var response = await _remoteAdminServices.getUniqueCompetencies();
+    var data = Data.fromJson(response.body);
+    if (data.isSuccess) {
+      _userData = User.fromJson(data.data);
+    }
+  }
+
+  Future<void> getCompById(int id) async {
+    var response = await _remoteAdminServices.getCompetencyById(id);
+    var data = Data.fromJson(response.body);
+    if (data.isSuccess) {
+      _userData = User.fromJson(data.data);
+    }
+  }
+
+  Future<void> addComp(String name, int priority, String level, int testTime,
+      int pass, List<Map> skills, List<Map> questions) async {
+    var response = await _remoteAdminServices.addCompetency(
+        name, priority, level, testTime, pass, skills, questions);
+    var data = Data.fromJson(response.body);
+    if (data.isSuccess) {
+      _userData = User.fromJson(data.data);
+    }
+  }
+
+  Future<void> editComp(int id, String name, int priority, String level,
+      int testTime, int pass, List<Map> skills, List<Map> questions) async {
+    var response = await _remoteAdminServices.editCompetency(
+        id, name, priority, level, testTime, pass);
+    var data = Data.fromJson(response.body);
+    if (data.isSuccess) {
+      _userData = User.fromJson(data.data);
+    }
+  }
+
+  Future<void> addTestQuestions(int id, List<Map> questions) async {
+    var response = await _remoteAdminServices.addTestQuestions(id, questions);
+    var data = Data.fromJson(response.body);
+    if (data.isSuccess) {
+      _userData = User.fromJson(data.data);
+    }
+  }
+
+  Future<void> editQuestions(
+      int id, int qId, String desc, List<Map> answerOptions) async {
+    var response =
+        await _remoteAdminServices.editQuestions(id, qId, desc, answerOptions);
+    var data = Data.fromJson(response.body);
+    if (data.isSuccess) {
+      _userData = User.fromJson(data.data);
+    }
+  }
+
+  Future<void> addSkill(int id, String name, List<String> markdowns) async {
+    var response = await _remoteAdminServices.addSkill(id, name, markdowns);
+    var data = Data.fromJson(response.body);
+    if (data.isSuccess) {
+      _userData = User.fromJson(data.data);
+    }
+  }
+
+  Future<void> deleteComp(int id) async {
+    var response = await _remoteAdminServices.deleteComp(id);
+    var data = Data.fromJson(response.body);
+    if (data.isSuccess) {
+      _userData = User.fromJson(data.data);
+    }
+  }
+
+  Future<void> deleteSkill(int id, int skillId) async {
+    var response = await _remoteAdminServices.deleteSkill(id, skillId);
+    var data = Data.fromJson(response.body);
+    if (data.isSuccess) {
+      _userData = User.fromJson(data.data);
+    }
+  }
+
+  Future<void> deleteQuestion(int id, int qId) async {
+    var response = await _remoteAdminServices.deleteQuestion(id, qId);
+    var data = Data.fromJson(response.body);
+    if (data.isSuccess) {
+      _userData = User.fromJson(data.data);
+    }
   }
 }
